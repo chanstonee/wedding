@@ -218,12 +218,12 @@ body:has(.wedding-invitation)::before {
   max-width: 326px;
   position: relative;
   z-index: 1;
-  transform-origin: 50% 92%;
+  transform-origin: 50% 100%;
 }
 .is-revealed .inv-couple {
   animation:
     inv-couple-enter 1.4s 0.1s both,
-    inv-couple-sway 5s 1.6s ease-in-out infinite alternate;
+    inv-couple-sway 3.8s 1.6s ease-in-out infinite alternate;
 }
 .inv-hero h1 {
   z-index: 1;
@@ -894,10 +894,10 @@ body:has(.wedding-invitation)::before {
 }
 @keyframes inv-couple-sway {
   from {
-    transform: rotate(-1deg);
+    transform: rotate(-1.6deg);
   }
   to {
-    transform: rotate(1deg);
+    transform: rotate(1.6deg);
   }
 }
 @keyframes inv-line-pulse {
