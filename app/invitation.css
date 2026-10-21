@@ -338,6 +338,8 @@ body:has(.wedding-invitation)::before {
   gap: 40px;
 }
 .inv-schedule li {
+  --motion-scale: 0.76;
+  --motion-opacity: 0.64;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -635,12 +637,20 @@ body:has(.wedding-invitation)::before {
   top: 7px;
 }
 .inv-ending-date:after {
+  box-sizing: border-box;
   left: 20px;
   top: 3px;
   border: 1px solid #fff;
 }
 .inv-ending-date time {
-  position: relative;
+  position: absolute;
+  left: 20px;
+  top: 3px;
+  width: 111.54px;
+  height: 33.54px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   z-index: 1;
   color: #fff;
   font-weight: 700;

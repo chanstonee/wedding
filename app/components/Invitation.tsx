@@ -126,20 +126,21 @@ function useScrollMotion(root: RefObject<HTMLElement | null>) {
       frame = 0;
       const center = window.scrollY + window.innerHeight * 0.5;
       const range = Math.max(1, window.innerHeight * 0.6);
+      const timelineRange = Math.max(1, window.innerHeight * 0.3);
       for (const { element, center: itemCenter, timeline } of positions) {
-        const progress = Math.max(0, 1 - Math.abs(itemCenter - center) / range);
+        const progress = Math.max(0, 1 - Math.abs(itemCenter - center) / (timeline ? timelineRange : range));
         const eased = progress * progress * (3 - 2 * progress);
         element.style.setProperty(
           "--motion-scale",
           preference.matches
             ? "1"
-            : String(timeline ? 0.84 + 0.2 * eased : 0.83 + 0.29 * eased),
+            : String(timeline ? 0.76 + 0.42 * eased : 0.83 + 0.29 * eased),
         );
         element.style.setProperty(
           "--motion-opacity",
           preference.matches
             ? "1"
-            : String(timeline ? 0.86 + 0.14 * eased : 0.65 + 0.35 * eased),
+            : String(timeline ? 0.64 + 0.36 * eased : 0.65 + 0.35 * eased),
         );
       }
     };
