@@ -301,45 +301,9 @@ function Curtain({
   return (
     <div className={`inv-curtain ${opening ? "is-opening" : ""}`}>
       {["left", "right"].map((side) => (
-        <svg
-          key={side}
-          className={`inv-curtain-panel inv-curtain-${side}`}
-          viewBox="0 0 100 100"
-          preserveAspectRatio="none"
-          aria-hidden="true"
-        >
-          <defs>
-            <linearGradient id={`folds-${side}`} x1="0" x2="1">
-              <stop offset="0" stopColor="#c5b8ad" />
-              <stop offset=".12" stopColor="#eee6d9" />
-              <stop offset=".24" stopColor="#d4c8bb" />
-              <stop offset=".38" stopColor="#f4eee3" />
-              <stop offset=".5" stopColor="#cfc0b3" />
-              <stop offset=".63" stopColor="#eee6d8" />
-              <stop offset=".77" stopColor="#d2c3b6" />
-              <stop offset=".9" stopColor="#f2eade" />
-              <stop offset="1" stopColor="#bba799" />
-            </linearGradient>
-          </defs>
-          <path
-            fill={`url(#folds-${side})`}
-            d="M0 0 H98 C100 25 96 75 100 100 H0 Z"
-          >
-            {opening && (
-              <animate
-                begin="indefinite"
-                ref={(element) => {
-                  (element as SVGAnimateElement | null)?.beginElement();
-                }}
-                attributeName="d"
-                dur="1.9s"
-                fill="freeze"
-                values="M0 0 H98 C100 25 96 75 100 100 H0 Z; M0 0 H92 C32 25 70 75 100 100 H0 Z; M0 0 H75 C15 25 22 75 88 100 H0 Z; M0 0 H98 C100 25 96 75 100 100 H0 Z"
-                keyTimes="0;.36;.7;1"
-              />
-            )}
-          </path>
-        </svg>
+        <div key={side} className={`inv-curtain-panel inv-curtain-${side}`} aria-hidden="true">
+          <img src={`${publicBasePath}/assets/invitation/curtain.png`} alt="" width="359" height="594" />
+        </div>
       ))}
       <button
         className="inv-curtain-open"
@@ -348,12 +312,7 @@ function Curtain({
         aria-label="초대장 열기"
       >
         <span className="inv-curtain-copy">
-          <span className="inv-curtain-date">2027. 05. 15</span>
-          <span className="inv-curtain-names">재훈 & 다연</span>
-          <span className="inv-curtain-hint">
-            화면을 탭해 초대장을 열어 주세요
-          </span>
-          <span className="inv-curtain-line" aria-hidden="true" />
+          <span className="inv-curtain-seal">저를<br />눌러주세요!</span>
         </span>
       </button>
     </div>

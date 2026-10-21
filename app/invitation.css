@@ -636,23 +636,24 @@ body:has(.wedding-invitation)::before {
 .inv-curtain-panel {
   position: absolute;
   top: 0;
-  width: 52%;
+  width: 50.565%;
   height: 100%;
-  filter: drop-shadow(0 0 14px #67544735);
+  transform-origin: top left;
   transition: transform 1.9s cubic-bezier(0.65, 0, 0.2, 1);
 }
-.inv-curtain-left {
-  left: 0;
+.inv-curtain-panel img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
-.inv-curtain-right {
-  right: 0;
-  transform: scaleX(-1);
-}
+.inv-curtain-left { left: 0; }
+.inv-curtain-right { right: 0; transform-origin: top right; }
 .is-opening .inv-curtain-left {
-  transform: translateX(-110%) skewY(-3deg);
+  transform: translateX(-110%) skewY(-3deg) scaleX(.85);
 }
 .is-opening .inv-curtain-right {
-  transform: translateX(110%) scaleX(-1) skewY(-3deg);
+  transform: translateX(110%) skewY(3deg) scaleX(.85);
 }
 .inv-curtain-open {
   position: absolute;
@@ -661,46 +662,32 @@ body:has(.wedding-invitation)::before {
   height: 100%;
   display: grid;
   place-items: center;
-  padding: 24px;
+  padding: 0 0 40px;
   background: transparent;
-  color: #715a54;
+  color: #fff;
 }
 .inv-curtain-copy {
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  transition:
-    opacity 0.45s ease,
-    transform 0.6s ease;
-  text-shadow: 0 1px 1px #ffffff70;
+  display: grid;
+  place-items: center;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: #866462;
+  transition: opacity .45s ease, transform .6s ease;
 }
-.inv-curtain-date {
-  font-size: 14px;
-  line-height: 24px;
-  letter-spacing: 2px;
-  margin-bottom: 20px;
-}
-.inv-curtain-names {
-  font:
-    700 42px/1.3 "Designhouse",
-    serif;
-}
-.inv-curtain-hint {
-  font-size: 14px;
-  line-height: 24px;
-  margin-top: 40px;
-}
-.inv-curtain-line {
-  width: 1px;
-  height: 40px;
-  background: #866a6a80;
-  margin-top: 20px;
-  transform-origin: top;
-  animation: inv-line-pulse 2s ease-in-out infinite;
+.inv-curtain-seal {
+  display: grid;
+  align-content: center;
+  width: 101.538px;
+  height: 101.538px;
+  border: 1.846px solid #f7f2e6;
+  border-radius: 50%;
+  font: 700 14.769px/1.3 "Designhouse", serif;
+  text-align: center;
 }
 .is-opening .inv-curtain-copy {
   opacity: 0;
-  transform: translateY(-10px);
+  transform: scale(.9);
 }
 .inv-overlay {
   position: fixed;
