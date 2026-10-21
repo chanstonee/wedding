@@ -11,6 +11,8 @@ import {
   type RefObject,
 } from "react";
 
+import WeddingMusic from "./WeddingMusic";
+
 const publicBasePath = process.env.NEXT_PUBLIC_SITE_BASE_PATH ?? "";
 const asset = (section: number, name = "img", extension = "svg") =>
   `${publicBasePath}/assets/invitation/section-${section}-${name}.${extension}`;
@@ -807,6 +809,7 @@ export default function Invitation() {
           </div>
         </section>
       </main>
+      <WeddingMusic visible={gate === "open" && modal === null} />
       {gate !== "open" && (
         <Curtain
           opening={gate === "opening"}

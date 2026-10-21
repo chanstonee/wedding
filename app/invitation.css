@@ -991,3 +991,16 @@ body:has(.wedding-invitation)::before {
     opacity: 1 !important;
   }
 }
+
+/* The YouTube player stays visible during playback; closing unmounts and stops it. */
+.inv-music { position: fixed; z-index: 900; top: max(12px, env(safe-area-inset-top)); right: max(12px, env(safe-area-inset-right)); }
+.wedding-invitation .inv-music-trigger { display: flex; align-items: center; gap: 6px; min-height: 44px; padding: 8px 14px; border: 1px solid #866a6a55; border-radius: 24px; background: #f4f0e7f5; color: #604e4d; font-size: 13px; line-height: 20px; }
+.inv-music-trigger > span { font-size: 20px; }
+.inv-music-panel { position: fixed; right: max(12px, env(safe-area-inset-right)); bottom: max(12px, env(safe-area-inset-bottom)); width: min(288px, calc(100vw - 24px)); padding: 0; border: 1px solid #866a6a55; background: #f4f0e7; color: #604e4d; box-shadow: 0 6px 24px #604e4d24; }
+.inv-music-panel header { display: flex; align-items: center; justify-content: space-between; min-height: 52px; padding: 6px 8px 6px 14px; }
+.inv-music-panel header > div { display: flex; flex-direction: column; }
+.inv-music-panel strong { font-size: 14px; line-height: 20px; }
+.inv-music-panel header span { font-size: 12px; line-height: 18px; }
+.inv-music-panel header button { width: 44px; height: 44px; background: transparent; font-size: 24px; }
+.inv-music-panel iframe { display: block; width: 100%; min-width: 200px; height: 200px; border: 0; }
+.inv-music-panel > a { display: block; min-height: 44px; padding: 10px 14px; font-size: 12px; line-height: 24px; text-decoration: underline; text-underline-offset: 3px; }
