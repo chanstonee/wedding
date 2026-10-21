@@ -5,18 +5,45 @@ import test from "node:test";
 const output = new URL("../out/", import.meta.url);
 const basePath = (process.env.PAGES_BASE_PATH ?? "/wedding").replace(/\/$/, "");
 
-test("exports the invitation and guestbook entry point for GitHub Pages", async () => {
+test("exports the Figma invitation through the ending for GitHub Pages", async () => {
   const html = await readFile(new URL("index.html", output), "utf8");
   assert.match(html, /<html[^>]*lang="ko"/);
-  assert.match(html, /방명록/);
-  assert.match(html, /사진첩/);
-  assert.doesNotMatch(html, /감사의 마음/);
+  for (const title of [
+    "재훈 &amp; 다연",
+    "날짜 안내",
+    "타임테이블",
+    "우리의 웨딩스냅",
+    "마음 전하실 곳",
+    "신부 유다연",
+    "신랑 주재훈",
+    "초대장 열기",
+  ])
+    assert.ok(html.includes(title), title);
+  assert.equal((html.match(/<section class="inv-section /g) ?? []).length, 9);
+  assert.match(html, /class="inv-section inv-ending"/);
+  assert.doesNotMatch(html, /드레스코드|꿈을 위한 안내|class="guestbook/);
   assert.ok(html.includes(`${basePath}/_next/`));
-  assert.ok(html.includes(`${basePath}/assets/doodle-thanks.png`));
-  assert.match(html, /data-theme="blush"/);
-  assert.match(html, /테마 변경, 현재 블러시/);
+  assert.ok(html.includes(`${basePath}/assets/invitation/section-0-img.svg`));
+  assert.match(html, /계좌번호는 디자인 확인용 예시입니다/);
+  assert.match(html, /aria-expanded="false"/);
   assert.doesNotMatch(html, /관리자 이메일|인증 메일 보내기/);
   await access(new URL(".nojekyll", output));
+});
+
+test("all original Figma assets are local and the exported page has no temporary asset URLs", async () => {
+  const manifest = JSON.parse(
+    await readFile(new URL("../figma-assets.json", import.meta.url), "utf8"),
+  );
+  assert.equal(manifest.length, 51);
+  for (const asset of manifest) {
+    const bytes = await readFile(
+      new URL(`assets/invitation/${asset.file}`, output),
+    );
+    assert.ok(bytes.byteLength > 0, asset.file);
+    assert.equal(bytes.byteLength, asset.bytes, asset.file);
+  }
+  const html = await readFile(new URL("index.html", output), "utf8");
+  assert.doesNotMatch(html, /figma\.com\/api\/mcp\/asset/);
 });
 
 test("exports a separate admin page without indexing or private guestbook data", async () => {

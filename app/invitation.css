@@ -1,0 +1,969 @@
+@font-face {
+  font-family: "Designhouse";
+  src: url("/assets/invitation/fonts/designhouseOTFBold.otf") format("opentype");
+  font-weight: 700;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Pretendard";
+  src: url("/assets/invitation/fonts/Pretendard-Regular.otf") format("opentype");
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Pretendard";
+  src: url("/assets/invitation/fonts/Pretendard-Medium.otf") format("opentype");
+  font-weight: 500;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Pretendard";
+  src: url("/assets/invitation/fonts/Pretendard-Bold.otf") format("opentype");
+  font-weight: 700;
+  font-display: swap;
+}
+
+html:has(.wedding-invitation),
+body:has(.wedding-invitation) {
+  height: auto;
+  min-height: 100%;
+  overflow: visible;
+  background: #e6e1d8;
+}
+body:has(.wedding-invitation)::before {
+  content: none;
+}
+.wedding-invitation {
+  --inv-paper: #f4f0e7;
+  --inv-heading: #866a6a;
+  --inv-body: #604e4d;
+  --inv-caption: #776362;
+  --inv-ribbon: #cbd1d9;
+  color: var(--inv-body);
+  font:
+    400 16px/28px "Pretendard",
+    sans-serif;
+  letter-spacing: -0.16px;
+  overflow: clip;
+}
+.wedding-invitation * {
+  box-sizing: border-box;
+}
+.wedding-invitation p,
+.wedding-invitation h1,
+.wedding-invitation h2,
+.wedding-invitation h3 {
+  margin: 0;
+}
+.wedding-invitation h1,
+.wedding-invitation h2 {
+  color: var(--inv-heading);
+  font:
+    700 32px/40px "Designhouse",
+    serif;
+  letter-spacing: 0;
+}
+.wedding-invitation button,
+.wedding-invitation input,
+.wedding-invitation a {
+  -webkit-tap-highlight-color: transparent;
+}
+.wedding-invitation button {
+  cursor: pointer;
+  border-radius: 0;
+}
+.wedding-invitation button:disabled {
+  cursor: default;
+}
+.wedding-invitation :focus-visible {
+  outline: 2px solid var(--inv-heading);
+  outline-offset: 5px;
+}
+.wedding-invitation h1:focus {
+  outline: none;
+}
+.wedding-invitation img {
+  display: block;
+  height: auto;
+  max-width: 100%;
+}
+.inv-paper {
+  width: 100%;
+  max-width: 390px;
+  margin: 0 auto;
+  background: var(--inv-paper);
+  overflow: clip;
+}
+.inv-section {
+  position: relative;
+  padding: 48px 32px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  text-align: center;
+  isolation: isolate;
+}
+.inv-section > h2,
+.inv-section > p {
+  position: relative;
+  z-index: 1;
+}
+.inv-caption {
+  font-size: 14px;
+  line-height: 24px;
+  color: var(--inv-caption);
+}
+.inv-decoration {
+  position: absolute;
+  z-index: 0;
+  pointer-events: none;
+  transform: rotate(var(--art-rotate, 0deg));
+}
+[data-scroll-motion] {
+  display: block;
+  transform: scale(var(--motion-scale, 1));
+  opacity: var(--motion-opacity, 1);
+  transform-origin: center;
+}
+.inv-decoration img {
+  max-width: none;
+}
+.inv-double-button {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 100%;
+  min-height: 52px;
+  padding: 10px 16px;
+  border: 1px solid var(--inv-heading);
+  background: transparent;
+  font-weight: 500;
+  line-height: 24px;
+  transition: background 0.2s ease;
+}
+.inv-double-button:before {
+  content: "";
+  position: absolute;
+  inset: 3px;
+  border: 1px solid var(--inv-heading);
+  pointer-events: none;
+}
+.inv-double-button:hover,
+.inv-copy-button:hover,
+.inv-map-options a:hover {
+  background: rgba(134, 106, 106, 0.07);
+}
+
+.inv-hero {
+  padding-top: 64px;
+}
+.inv-date-tape {
+  position: absolute;
+  top: 5px;
+  left: -12px;
+  width: calc(100% + 24px);
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  padding: 8px 10px;
+  background: var(--inv-ribbon);
+  font-size: 12px;
+  line-height: 12px;
+  color: var(--inv-caption);
+  white-space: nowrap;
+  transform: rotate(-6deg);
+}
+.inv-hero-wordmark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: calc(100% + 20px);
+  height: 98.315px;
+}
+.inv-hero-wordmark img {
+  transform: rotate(-3.62deg);
+}
+.inv-couple {
+  margin-top: -24px;
+  width: 100%;
+  max-width: 326px;
+  position: relative;
+  z-index: 1;
+  transform-origin: 50% 92%;
+}
+.is-revealed .inv-couple {
+  animation:
+    inv-couple-enter 1.7s 0.2s both,
+    inv-couple-sway 5s 2s ease-in-out infinite alternate;
+}
+.inv-hero h1 {
+  z-index: 1;
+}
+.inv-hero-date {
+  position: relative;
+  width: 184px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+.inv-hero-date img {
+  position: absolute;
+  left: 2px;
+  top: 1px;
+}
+.inv-hero-date time {
+  position: relative;
+  font-size: 22px;
+  font-weight: 500;
+  line-height: 28px;
+}
+.inv-message {
+  min-height: 316px;
+}
+.inv-message-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  position: relative;
+  z-index: 1;
+}
+.inv-calendar {
+  position: relative;
+  width: 100%;
+}
+.inv-calendar-days,
+.inv-calendar-numbers {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+}
+.inv-calendar-days {
+  font-size: 20px;
+  line-height: 20px;
+  margin-bottom: 24px;
+}
+.inv-calendar-numbers {
+  font-size: 22px;
+  line-height: 22px;
+}
+.inv-calendar-marker {
+  position: absolute;
+  top: 35px;
+  left: calc(50% - 26px);
+}
+.inv-calendar-numbers .is-wedding-day {
+  color: #fff;
+  font-weight: 700;
+}
+.inv-date-description {
+  padding-top: 51px;
+}
+.inv-date-description time {
+  display: inline-block;
+  margin-bottom: 4px;
+}
+.inv-venue {
+  padding-bottom: 48px;
+  align-items: stretch;
+  text-align: left;
+}
+.inv-venue h2 {
+  margin-top: -12px;
+  max-width: 222px;
+}
+.inv-address {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  z-index: 1;
+}
+.inv-address img {
+  flex-shrink: 0;
+}
+.inv-timeline {
+  height: 696px;
+  padding-bottom: 48px;
+  overflow: hidden;
+}
+.inv-timeline-art {
+  position: absolute;
+  top: 98px;
+  left: calc(50% - 163.5px);
+  width: 330px;
+  z-index: -1;
+  pointer-events: none;
+}
+.inv-timeline-art img {
+  max-width: none;
+}
+.inv-schedule {
+  list-style: none;
+  width: 100%;
+  margin: 0;
+  padding: 60px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+.inv-schedule li {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+.inv-schedule time {
+  font-size: 26px;
+  font-weight: 500;
+  line-height: 32px;
+}
+.inv-schedule span {
+  font-size: 17px;
+  line-height: 28px;
+}
+.inv-gallery {
+  padding-top: 64px;
+  padding-bottom: 84px;
+  min-height: 642px;
+}
+.inv-gallery-border {
+  position: absolute;
+  left: calc(50% - 201px);
+  top: -35.64px;
+  z-index: -1;
+  width: 402px;
+  pointer-events: none;
+}
+.inv-gallery-border img {
+  max-width: none;
+}
+.inv-photo-grid {
+  width: 272px;
+  max-width: 100%;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  position: relative;
+  z-index: 1;
+}
+.inv-photo-grid button {
+  padding: 0;
+  overflow: hidden;
+  border-radius: 20px;
+  background: #ded8cf;
+  aspect-ratio: 128/160.196;
+}
+.inv-photo-grid img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+.inv-photo-grid button:hover img {
+  transform: scale(1.045);
+}
+.inv-gifts {
+  padding-top: 180px;
+  padding-bottom: 148px;
+  gap: 36px;
+  min-height: 648px;
+}
+.inv-gifts-intro {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.inv-gifts .inv-gifts-angel {
+  top: auto !important;
+  bottom: -8px;
+}
+.inv-accounts {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  position: relative;
+  z-index: 1;
+}
+.inv-account {
+  border: 1px solid var(--inv-heading);
+  background: var(--inv-paper);
+  text-align: left;
+}
+.inv-account h3 {
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 28px;
+}
+.inv-account-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  min-height: 64px;
+  padding: 16px;
+  background: transparent;
+}
+.inv-plus {
+  transition: transform 0.3s ease;
+}
+.is-expanded .inv-plus {
+  transform: rotate(45deg);
+}
+.inv-account-collapse {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.inv-account-collapse > div {
+  overflow: hidden;
+  min-height: 0;
+}
+.is-expanded .inv-account-collapse {
+  grid-template-rows: 1fr;
+}
+.inv-account-details {
+  padding: 0 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.inv-account-number {
+  font-weight: 500;
+  overflow-wrap: anywhere;
+}
+.inv-copy-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  min-height: 48px;
+  padding: 10px 16px;
+  border: 1px solid var(--inv-heading);
+  background: transparent;
+  font-weight: 500;
+  line-height: 24px;
+}
+.inv-account-example {
+  color: var(--inv-caption);
+  font-size: 12px;
+  line-height: 20px;
+  text-align: center;
+}
+.inv-rsvp {
+  padding-top: 54px;
+  padding-bottom: 0;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+.inv-rsvp-frame {
+  width: 360px;
+  max-width: 100%;
+  min-height: 671px;
+  position: relative;
+  padding: 46px 17px 40px;
+}
+.inv-rsvp-border {
+  position: absolute;
+  left: 0;
+  top: 16px;
+  pointer-events: none;
+}
+.inv-rsvp-bow {
+  position: absolute;
+  top: 0;
+  left: calc(50% - 84px);
+  transform: rotate(0.48deg);
+  pointer-events: none;
+}
+.inv-rsvp-wine {
+  position: absolute;
+  top: 226px;
+  right: 12.56px;
+  pointer-events: none;
+}
+.inv-rsvp-flower {
+  position: absolute;
+  bottom: 3px;
+  left: 40px;
+  pointer-events: none;
+}
+.inv-rsvp-content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 17px;
+  z-index: 1;
+}
+.inv-rsvp-content > h2 {
+  padding: 24px 0;
+}
+.inv-rsvp-content > p {
+  font-size: 16px;
+  line-height: 28px;
+}
+.inv-rsvp form {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+.inv-rsvp fieldset {
+  border: 0;
+  padding: 0;
+  margin: 0 0 24px;
+  min-width: 0;
+}
+.inv-rsvp legend,
+.inv-name-label {
+  font-size: 16px;
+  line-height: 28px;
+  padding: 0;
+  margin-bottom: 8px;
+}
+.inv-radio {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  cursor: pointer;
+}
+.inv-radio input {
+  position: absolute;
+  left: 0;
+  width: 20px;
+  height: 20px;
+  opacity: 0;
+}
+.inv-radio input:focus-visible + img {
+  outline: 2px solid var(--inv-heading);
+  outline-offset: 4px;
+  border-radius: 50%;
+}
+.inv-radio img {
+  flex-shrink: 0;
+}
+.inv-name-input {
+  width: 100%;
+  height: 48px;
+  border: 0;
+  border-bottom: 1px solid var(--inv-heading);
+  border-radius: 0;
+  padding: 12px 0;
+  background: transparent;
+  font-size: 16px;
+  color: var(--inv-body);
+}
+.inv-name-input::placeholder {
+  color: var(--inv-caption);
+}
+.inv-rsvp-note {
+  margin-top: 12px !important;
+}
+.inv-rsvp .inv-double-button {
+  margin: 24px auto 0;
+  width: calc(100% - 46px);
+  min-height: 44px;
+  font-size: 14px;
+  padding: 8px 12px;
+}
+.inv-ending {
+  padding-top: 120px;
+  padding-bottom: max(64px, env(safe-area-inset-bottom));
+}
+.inv-garland {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  pointer-events: none;
+}
+.inv-ending > p {
+  margin-top: -18px;
+  white-space: nowrap;
+}
+.inv-ending-date {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 152px;
+  height: 48px;
+}
+.inv-ending-date:before,
+.inv-ending-date:after {
+  content: "";
+  position: absolute;
+  width: 111.54px;
+  height: 33.54px;
+  background: var(--inv-ribbon);
+}
+.inv-ending-date:before {
+  left: 24px;
+  top: 7px;
+}
+.inv-ending-date:after {
+  left: 20px;
+  top: 3px;
+  border: 1px solid #fff;
+}
+.inv-ending-date time {
+  position: relative;
+  z-index: 1;
+  color: #fff;
+  font-weight: 700;
+  line-height: 24px;
+}
+.inv-dinner {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  min-height: 240px;
+}
+
+.inv-curtain {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  overflow: hidden;
+}
+.inv-curtain-panel {
+  position: absolute;
+  top: 0;
+  width: 52%;
+  height: 100%;
+  filter: drop-shadow(0 0 14px #67544735);
+  transition: transform 1.9s cubic-bezier(0.65, 0, 0.2, 1);
+}
+.inv-curtain-left {
+  left: 0;
+}
+.inv-curtain-right {
+  right: 0;
+  transform: scaleX(-1);
+}
+.is-opening .inv-curtain-left {
+  transform: translateX(-110%) skewY(-3deg);
+}
+.is-opening .inv-curtain-right {
+  transform: translateX(110%) scaleX(-1) skewY(-3deg);
+}
+.inv-curtain-open {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: transparent;
+  color: #715a54;
+}
+.inv-curtain-copy {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  transition:
+    opacity 0.45s ease,
+    transform 0.6s ease;
+  text-shadow: 0 1px 1px #ffffff70;
+}
+.inv-curtain-date {
+  font-size: 14px;
+  line-height: 24px;
+  letter-spacing: 2px;
+  margin-bottom: 20px;
+}
+.inv-curtain-names {
+  font:
+    700 42px/1.3 "Designhouse",
+    serif;
+}
+.inv-curtain-hint {
+  font-size: 14px;
+  line-height: 24px;
+  margin-top: 40px;
+}
+.inv-curtain-line {
+  width: 1px;
+  height: 40px;
+  background: #866a6a80;
+  margin-top: 20px;
+  transform-origin: top;
+  animation: inv-line-pulse 2s ease-in-out infinite;
+}
+.is-opening .inv-curtain-copy {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+.inv-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(0, 0, 0, 0.36);
+  overscroll-behavior: contain;
+  animation: inv-overlay-enter 0.2s ease both;
+}
+.inv-dialog {
+  width: 326px;
+  max-width: 100%;
+  max-height: calc(100svh - 48px);
+  overflow: auto;
+  padding: 24px;
+  border: 1px solid var(--inv-heading);
+  background: var(--inv-paper);
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+.inv-dialog-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.inv-dialog-heading h2 {
+  font-size: 32px;
+  line-height: 40px;
+}
+.inv-close {
+  display: grid;
+  place-items: center;
+  min-width: 44px;
+  height: 44px;
+  padding: 12px;
+  margin: -6px -12px -6px 0;
+  background: transparent;
+}
+.inv-map-address {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.inv-map-options {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.inv-map-options a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 64px;
+  padding: 12px 16px;
+  border: 1px solid var(--inv-heading);
+  color: var(--inv-body);
+}
+.inv-map-options a span {
+  display: flex;
+  flex-direction: column;
+}
+.inv-map-options strong {
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 24px;
+}
+.inv-map-options small {
+  font-size: 14px;
+  line-height: 24px;
+  color: var(--inv-caption);
+}
+.inv-lightbox {
+  background: rgba(30, 24, 22, 0.92);
+  padding: 16px;
+}
+.inv-lightbox .inv-dialog {
+  width: 760px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--inv-paper);
+  gap: 12px;
+  max-height: calc(100svh - 32px);
+}
+.inv-lightbox .inv-dialog-heading {
+  padding: 0 8px;
+}
+.inv-lightbox h2 {
+  color: var(--inv-paper);
+  font-size: 26px;
+}
+.inv-lightbox .inv-close {
+  background: var(--inv-paper);
+  margin: 0;
+  border-radius: 50%;
+}
+.inv-lightbox-image {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 0;
+  flex-shrink: 1;
+}
+.inv-lightbox-image img {
+  max-height: calc(100svh - 170px);
+  width: auto;
+  max-width: 100%;
+  object-fit: contain;
+  border-radius: 4px;
+}
+.inv-lightbox-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 32px;
+}
+.inv-lightbox-nav button {
+  min-width: 48px;
+  min-height: 48px;
+  background: transparent;
+  font-size: 24px;
+}
+.inv-response {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px 0;
+  border-top: 1px solid #866a6a55;
+  border-bottom: 1px solid #866a6a55;
+  overflow-wrap: anywhere;
+}
+.inv-response-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.inv-toast {
+  position: fixed;
+  bottom: max(24px, env(safe-area-inset-bottom));
+  left: 50%;
+  z-index: 2000;
+  width: max-content;
+  max-width: calc(100% - 32px);
+  padding: 12px 18px;
+  background: #604e4df2;
+  color: var(--inv-paper);
+  border-radius: 6px;
+  font-size: 14px;
+  line-height: 24px;
+  text-align: center;
+  opacity: 0;
+  transform: translate(-50%, 10px);
+  pointer-events: none;
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
+}
+.inv-toast.is-visible {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+@keyframes inv-couple-enter {
+  from {
+    opacity: 0;
+    transform: translateY(15px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+@keyframes inv-couple-sway {
+  from {
+    transform: rotate(-1deg);
+  }
+  to {
+    transform: rotate(1deg);
+  }
+}
+@keyframes inv-line-pulse {
+  0%,
+  100% {
+    transform: scaleY(0.65);
+    opacity: 0.45;
+  }
+  50% {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+}
+@keyframes inv-overlay-enter {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@media (max-width: 389px) {
+  .inv-date-description,
+  .inv-rsvp-note {
+    word-break: keep-all;
+  }
+  .wedding-invitation .inv-rsvp-border {
+    display: none;
+  }
+  /* Nine-slice the original border so corners retain their shape as text grows. */
+  .inv-rsvp-frame:before {
+    content: "";
+    position: absolute;
+    inset: 16px 0 0;
+    border: 36px solid transparent;
+    border-image: url("/assets/invitation/section-7-imgVector.svg") 36 stretch;
+    pointer-events: none;
+  }
+}
+@media (max-width: 359px) {
+  .inv-section {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+  .wedding-invitation h1,
+  .wedding-invitation h2 {
+    font-size: 30px;
+    line-height: 38px;
+  }
+  .inv-ending > p {
+    white-space: normal;
+  }
+  .inv-rsvp {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+  .inv-rsvp-frame {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+  .inv-rsvp-content > p {
+    font-size: 15px;
+  }
+  .inv-rsvp .inv-double-button {
+    width: 100%;
+  }
+  .inv-dialog {
+    padding: 20px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .wedding-invitation *,
+  .wedding-invitation *:before,
+  .wedding-invitation *:after {
+    animation: none !important;
+    transition-duration: 0.15s !important;
+  }
+  [data-scroll-motion] {
+    transform: none !important;
+    opacity: 1 !important;
+  }
+}
