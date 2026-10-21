@@ -291,6 +291,40 @@ function Dialog({
   );
 }
 
+// The reference mobile ribbon travels 712px in 11s at its 320px design width.
+const referenceRibbonSpeed = 712 / 11;
+function DateMarquee() {
+  const ribbon = useRef<HTMLDivElement>(null);
+  const group = useRef<HTMLDivElement>(null);
+  const [duration, setDuration] = useState(18);
+  useEffect(() => {
+    let active = true;
+    const measure = () => {
+      const paperWidth = ribbon.current?.closest(".inv-paper")?.clientWidth ?? 320;
+      const width = group.current?.scrollWidth;
+      if (active && width) setDuration(width / (referenceRibbonSpeed * paperWidth / 320));
+    };
+    const observer = new ResizeObserver(measure);
+    if (ribbon.current) observer.observe(ribbon.current);
+    if (group.current) observer.observe(group.current);
+    void document.fonts.ready.then(measure);
+    return () => { active = false; observer.disconnect(); };
+  }, []);
+  return (
+    <div className="inv-date-tape" ref={ribbon} aria-hidden="true">
+      <div className="inv-tape-track" style={{ "--inv-marquee-duration": `${duration}s` } as CSSProperties}>
+        {[0, 1].map((copy) => (
+          <div className="inv-tape-group" key={copy} ref={copy === 0 ? group : undefined}>
+            {Array.from({ length: 10 }, (_, index) => (
+              <span key={index}>2027. 05. 15 · 다연 &amp; 재훈</span>
+            ))}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function Curtain({
   opening,
   onOpen,
@@ -342,7 +376,7 @@ export default function Invitation() {
     const duration = window.matchMedia("(prefers-reduced-motion: reduce)")
       .matches
       ? 160
-      : 1950;
+      : 1600;
     const timer = window.setTimeout(() => {
       setGate("open");
     }, duration);
@@ -410,11 +444,7 @@ export default function Invitation() {
           className="inv-section inv-hero"
           aria-label="재훈과 다연의 결혼식"
         >
-          <div className="inv-date-tape" aria-hidden="true">
-            {Array.from({ length: 7 }, (_, index) => (
-              <span key={index}>2027. 05. 15</span>
-            ))}
-          </div>
+          <DateMarquee />
           <Decoration section={0} name="imgImage" x={329.5} y={145} />
           <Decoration section={0} name="imgImage1" x={304.4} y={505} />
           <Decoration section={0} name="imgImage2" x={306.7} y={182} />
