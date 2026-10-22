@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
-import "./themes.css";
 
 const publicBasePath =
   process.env.PAGES_BUILD === "1"

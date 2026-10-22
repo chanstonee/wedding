@@ -1,6 +1,6 @@
-# 방명록 연결하기
+# 방명록 관리자 연결하기
 
-청첩장은 GitHub Pages에서 실행되고 방명록은 Supabase에 저장됩니다. 방문자는 로그인 없이 글을 남깁니다. 공개 목록에는 이름과 작성일이 보이며, 비밀글의 본문은 데이터베이스에서 `NULL`로 바뀌어 전달됩니다. 관리자만 `/wedding/admin/`에서 이메일 Magic Link로 로그인해 전체 본문을 읽고 글을 숨기거나 삭제할 수 있습니다.
+현재 청첩장에는 방명록 입력 화면이 없습니다. 이전에 저장한 방명록은 Supabase에 남아 있으며, `/wedding/admin/`에서 등록된 관리자 계정으로 전체 본문을 읽고 글을 숨기거나 삭제할 수 있습니다. 이전 초대장의 공개 방명록 UI와 작성 검사는 `Wedding-Invitation` 저장소에 보관했습니다.
 
 아래 설정은 Supabase 프로젝트 소유자가 한 번 진행하면 됩니다. 프로젝트 URL과 공개 API 키를 등록하고 다시 빌드해야 실제 저장이 연결됩니다.
 
@@ -81,16 +81,13 @@ NEXT_PUBLIC_SUPABASE_URL=https://프로젝트-ID.supabase.co
 NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=sb_publishable_본인프로젝트공개키
 ```
 
-## 5. 실제 동작 확인하기
+## 5. 관리자 화면 확인하기
 
-1. 청첩장 방명록에서 공개글과 비밀글을 한 개씩 남깁니다.
-2. 로그아웃한 브라우저에서 공개글 본문이 보이고 비밀글에는 잠금 안내만 표시되는지 확인합니다.
-3. 브라우저 Network에서 `list_guestbook_entries`의 비밀글 `message`가 `null`인지 확인합니다.
-4. [관리자 화면](https://chanstonee.github.io/wedding/admin/)에서 등록한 이메일로 링크를 받고 로그인합니다.
-5. 비밀글 본문을 읽고 공개글을 숨깁니다. 청첩장을 새로 열어 숨긴 글이 보이지 않는지 확인한 뒤 관리 화면에서 복원합니다.
-6. 테스트 글을 삭제하고 관리자 화면에서 로그아웃합니다.
+1. 관리자 화면에서 등록된 이메일의 Magic Link로 로그인합니다.
+2. 기존 방명록의 공개·비밀글 본문을 읽고 숨김·복원 상태를 확인합니다.
+3. 필요한 경우 테스트 글만 삭제하고 로그아웃합니다.
 
-관리자로 로그인한 같은 브라우저에서 청첩장을 열어도 공개 목록 RPC는 비밀 본문을 항상 `NULL`로 반환합니다. 본문은 관리자 화면의 원본 조회에서만 전달됩니다.
+이전 공개 방명록의 작성·조회 화면은 별도 보관 저장소에서 확인할 수 있습니다.
 
 ## 데이터베이스 권한 테스트
 
@@ -106,24 +103,6 @@ supabase test db
 
 테스트 자체는 트랜잭션 안에서 실행하고 마지막에 롤백합니다. `supabase/config.toml`은 로컬 Supabase의 가입 차단과 관리자 리다이렉트를 설정하며 호스팅 프로젝트 설정은 별도로 Dashboard에서 적용해야 합니다. [Supabase 데이터베이스 테스트 안내](https://supabase.com/docs/guides/local-development/testing/overview)
 
-## 운영 시 알아둘 점
-
-### 로컬 브라우저 검증 (선택)
-
-`npm test`는 정적 페이지 내보내기와 공개 키 검증을 실행합니다. `tests/guestbook-browser.mjs`는 모바일 작성·비밀글 표시·목록 복구·관리자 숨김/삭제·로그아웃·Magic Link 콜백을 Chrome에서 검증합니다. Supabase 요청은 테스트 응답으로 바꾸며 실제 메일 발송이나 원격 DB 변경을 하지 않습니다.
-
-Playwright가 설치된 개발 환경에서 아래와 같이 실행합니다. 테스트 연결 값은 `.env.local`이나 GitHub 변수에 저장하지 마세요.
-
-```bash
-npm install --no-save --package-lock=false playwright
-npx playwright install chromium
-NEXT_PUBLIC_SUPABASE_URL=https://guestbook-test.supabase.co NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=sb_publishable_local_ui_test npm run build:pages
-npm run test:browser
-npm run build:pages
-```
-
-마지막 빌드는 실제 환경 설정으로 산출물을 복원합니다. 검증 화면은 `outputs/`에 저장합니다. 이미 설치된 브라우저를 사용할 때는 `BROWSER_EXECUTABLE`에 실행 파일 경로를 지정할 수 있습니다. 자동화 환경의 Playwright 모듈 위치가 다르면 `PLAYWRIGHT_MODULE`로 지정할 수 있습니다.
-
 ### 운영 메모
 
 - 이름은 최대 30자, 메시지는 최대 1,000자이며 앞뒤 공백을 제거한 뒤 저장합니다. 비밀글에서도 이름과 작성일은 공개 목록에 표시됩니다.
@@ -131,3 +110,7 @@ npm run build:pages
 - 숨기기는 복원할 수 있지만 삭제한 글은 이 관리 화면에서 복원할 수 없습니다.
 - 작성 RPC는 로그인이 없어도 호출할 수 있습니다. 브라우저의 입력 제어만으로 자동 스팸 호출을 차단할 수 없으므로 필요하면 CAPTCHA 검증과 서버/Edge Function의 요청 제한을 추가해야 합니다.
 - 연결 실패 시 Project URL, 공개 키, 마이그레이션 실행 여부를 확인합니다. 관리자 권한 오류는 로그인 계정 UID와 `guestbook_admins`의 UUID가 같은지 확인합니다. 로그인 메일 오류는 SMTP 제한과 Redirect URL을 확인합니다.
+
+## 이전 화면의 브라우저 검사
+
+이전 초대장 방명록 화면을 대상으로 한 `tests/guestbook-browser.mjs`와 관련 실행 명령은 `Wedding-Invitation` 저장소로 이동했습니다. 현재 초대장에는 방명록 입력 화면을 노출하지 않으며 `/admin/` 관리자 페이지와 Supabase 접근 정책은 유지합니다.
