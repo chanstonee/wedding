@@ -288,10 +288,14 @@ body:has(.wedding-invitation)::before {
 }
 .inv-date-description {
   padding-top: 51px;
+  word-break: keep-all;
 }
 .inv-date-description time {
-  display: inline-block;
-  margin-bottom: 4px;
+  display: block;
+}
+.inv-date-message {
+  display: block;
+  margin-top: 12px;
 }
 .inv-venue {
   padding-bottom: 48px;
@@ -528,6 +532,7 @@ body:has(.wedding-invitation)::before {
   display: flex;
   flex-direction: column;
   gap: 17px;
+  padding-inline: 12px;
   z-index: 1;
 }
 .inv-rsvp-content > h2 {
@@ -536,6 +541,8 @@ body:has(.wedding-invitation)::before {
 .inv-rsvp-content > p {
   font-size: 16px;
   line-height: 28px;
+  word-break: keep-all;
+  text-wrap: balance;
 }
 .inv-rsvp form {
   display: flex;
@@ -594,6 +601,8 @@ body:has(.wedding-invitation)::before {
 }
 .inv-rsvp-note {
   margin-top: 12px !important;
+  word-break: keep-all;
+  text-wrap: balance;
 }
 .inv-rsvp .inv-double-button {
   margin: 24px auto 0;
@@ -601,6 +610,16 @@ body:has(.wedding-invitation)::before {
   min-height: 44px;
   font-size: 14px;
   padding: 8px 12px;
+  background: var(--inv-ribbon);
+  border-color: #fff;
+  color: #fff;
+}
+.inv-rsvp .inv-double-button:before {
+  border-color: #fff;
+}
+.inv-rsvp .inv-double-button:hover {
+  background: var(--inv-ribbon);
+  filter: brightness(0.97);
 }
 .inv-ending {
   padding-top: 120px;

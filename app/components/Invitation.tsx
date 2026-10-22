@@ -523,10 +523,20 @@ export default function Invitation() {
             <time dateTime="2027-05-15T18:30:00+09:00">
               2027년 5월 15일 토요일
             </time>
-            <br />
-            따뜻하고 아름다운, 그리고 마음이 뭉클해지는 하루가 될 거예요.
-            <br />
-            오래도록 몇 번이고 다시 떠올리고 싶은 저녁을 약속할게요!
+            <span className="inv-date-message">
+              따뜻하고 아름다운,
+              <br />
+              그리고 마음이 뭉클해지는
+              <br />
+              하루가 될 거예요.
+            </span>
+            <span className="inv-date-message">
+              오래도록 몇 번이고
+              <br />
+              다시 떠올리고 싶은
+              <br />
+              저녁을 약속할게요!
+            </span>
           </p>
         </section>
         <section
@@ -767,8 +777,7 @@ export default function Invitation() {
                   pattern=".*\S.*"
                 />
                 <p className="inv-caption inv-rsvp-note">
-                  가족 또는 동반자와 함께 참석하시는 경우, 참석하시는 모든 분의
-                  성함을 입력해 주세요.
+                  참석하시는 모든 분의 성함을 입력해 주세요.
                 </p>
                 <button type="submit" className="inv-double-button">
                   참석 여부 전달하기
