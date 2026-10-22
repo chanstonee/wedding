@@ -12,6 +12,14 @@ import {
 } from "react";
 
 import WeddingMusic, { type WeddingMusicHandle } from "./WeddingMusic";
+import artwork from "../../figma-assets.json";
+
+const artworkWidths = new Map(
+  artwork.map(({ section, name, width }) => [
+    `${section}-${name}`,
+    Number(width ?? 0),
+  ]),
+);
 
 const publicBasePath = process.env.NEXT_PUBLIC_SITE_BASE_PATH ?? "";
 const asset = (section: number, name = "img", extension = "svg") =>
@@ -100,6 +108,7 @@ function Decoration({
         {
           left: `${x / 3.9}%`,
           top: y,
+          width: `calc(${artworkWidths.get(`${section}-${name}`)} * var(--inv-unit))`,
           "--art-rotate": `${rotate}deg`,
         } as CSSProperties
       }
