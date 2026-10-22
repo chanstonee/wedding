@@ -11,7 +11,7 @@ import {
   type RefObject,
 } from "react";
 
-import WeddingMusic from "./WeddingMusic";
+import WeddingMusic, { type WeddingMusicHandle } from "./WeddingMusic";
 
 const publicBasePath = process.env.NEXT_PUBLIC_SITE_BASE_PATH ?? "";
 const asset = (section: number, name = "img", extension = "svg") =>
@@ -357,6 +357,7 @@ function Curtain({
 }
 
 export default function Invitation() {
+  const music = useRef<WeddingMusicHandle>(null);
   const main = useRef<HTMLElement>(null),
     heroTitle = useRef<HTMLHeadingElement>(null);
   const [gate, setGate] = useState<"closed" | "opening" | "open">("closed");
@@ -809,11 +810,12 @@ export default function Invitation() {
           </div>
         </section>
       </main>
-      <WeddingMusic visible={gate === "open" && modal === null} />
+      <WeddingMusic ref={music} visible={gate !== "closed" && modal === null} />
       {gate !== "open" && (
         <Curtain
           opening={gate === "opening"}
           onOpen={() => {
+            music.current?.start();
             window.scrollTo(0, 0);
             setGate("opening");
           }}

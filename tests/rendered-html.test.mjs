@@ -56,3 +56,17 @@ test("exports a separate admin page without indexing or private guestbook data",
   assert.doesNotMatch(html, /class="guestbook-message"|class="guestbook-entry/);
   assert.match(html, /관리자 확인|연결 설정이 필요해요|로그인을 확인하는 중/);
 });
+
+test("ships the MP3 player before the curtain opens with the correct Pages path", async () => {
+  const html = await readFile(new URL("index.html", output), "utf8");
+  const audio = html.match(/<audio\b[^>]*>/)?.[0];
+  assert.ok(audio, "audio must already be mounted for the first curtain tap");
+  assert.ok(audio.includes(`${basePath}/assets/invitation/two-people.mp3`));
+  assert.match(audio, /\bloop(?:="")?/);
+  assert.match(audio, /preload="auto"/);
+  assert.doesNotMatch(html, /youtube\.com\/embed|윤미래/);
+  const source = await readFile(new URL("../public/assets/invitation/two-people.mp3", import.meta.url));
+  const exported = await readFile(new URL("assets/invitation/two-people.mp3", output));
+  assert.ok(source.byteLength > 0);
+  assert.deepEqual(exported, source);
+});
