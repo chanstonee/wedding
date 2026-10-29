@@ -595,9 +595,10 @@ export default function Invitation() {
           <Decoration
             section={4}
             name="imgImage2"
-            x={18.3}
+            x={-14}
             y={555.3}
             rotate={0.28}
+            className="inv-timeline-cocktail"
           />
           <Decoration section={4} name="imgImage3" x={30.4} y={385} />
           <ol className="inv-schedule">
@@ -616,10 +617,10 @@ export default function Invitation() {
           <div className="inv-gallery-border" aria-hidden="true">
             {/* eslint-disable-next-line @next/next/no-img-element -- Keep the supplied frame at its original aspect ratio. */}
             <img
-              src={`${publicBasePath}/assets/invitation/gallery-frame.jpg`}
+              src={`${publicBasePath}/assets/invitation/gallery-frame.svg`}
               alt=""
-              width={720}
-              height={1280}
+              width={389}
+              height={620}
               draggable={false}
               decoding="async"
             />

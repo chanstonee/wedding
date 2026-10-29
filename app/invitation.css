@@ -329,7 +329,8 @@ body:has(.wedding-invitation)::before {
   flex-shrink: 0;
 }
 .inv-timeline {
-  height: 696px;
+  /* Keep the hand above the frame while the ribbon continues behind it. */
+  height: 742px;
   padding-bottom: 48px;
   overflow: hidden;
 }
@@ -344,6 +345,9 @@ body:has(.wedding-invitation)::before {
 }
 .inv-timeline-art img {
   width: 100%;
+}
+.inv-timeline-cocktail {
+  max-width: 113.291px;
 }
 .inv-schedule {
   list-style: none;
@@ -384,11 +388,8 @@ body:has(.wedding-invitation)::before {
 .inv-gallery-border {
   position: absolute;
   inset: 0 0 auto;
-  z-index: 0;
   width: 100%;
   pointer-events: none;
-  /* The supplied JPEG has a white background; blend it into the ivory paper. */
-  mix-blend-mode: multiply;
 }
 .inv-gallery-border img {
   width: 100%;

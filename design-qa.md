@@ -1,116 +1,58 @@
-# Wedding gallery frame QA
+# Wedding gallery QA
 
 final result: passed
 
-## Scope and reference
+## Approved implementation
 
-Replace only the gallery's cloud border with the owner's latest uploaded ribbon
-frame. The supplied file is a 720 × 1280 JPEG with a white background, despite the
-request naming PNG. `public/assets/invitation/gallery-frame.jpg` preserves the
-uploaded bytes exactly (SHA256
-`10bba753d282f5d75964292770220cd68a487e4871306439b5bbd013e180f829`).
-Original Figma cloud/ribbon assets remain in the repository.
+The owner reviewed the local preview, requested the supplied vector frame and
+left-clipped cocktail decoration, reviewed the resulting preview, and authorized
+deployment. The source of truth is the owner's SVG and the verified preview at
+`/workspace/wedding-gallery-vector-preview/preview-390.png`.
 
-The frame uses its natural aspect ratio at full section width, with no crop or
-stretch. Its white background multiplies into the gallery's existing ivory paper.
-The redundant gallery-only ribbon decoration is replaced by the frame's ribbons.
-Gallery top padding reserves space below the central seal/ribbon. The minimum
-section height accommodates the frame at larger widths and preserves the 642px
-minimum on small phones. Other section styles and markup remain unchanged.
+- Use the supplied `gallery_frame [Vectorized].svg` byte-for-byte as
+  `public/assets/invitation/gallery-frame.svg`, viewBox 0 0 389 620.
+  SHA256: 114aa190f96aa419610e7cf33470319ecbaad2b86313a94963ac20f40f207b78.
+- Preserve the SVG's native aspect ratio, transparent outside/interior and opaque
+  banner fill. Remove the previous JPEG's blend treatment. Keep the archived JPEG
+  and all original Figma assets intact.
+- Keep the gallery section background explicitly none. The page's ivory backdrop
+  remains unchanged. Maintain -46px gallery overlap and reserve 742px for the
+  timetable so its grey ribbon continues behind the curved, opaque SVG banner.
+- Move only the cocktail decoration to design x=-14, retaining y=555.3, rotation
+  and scroll animation. Its sleeve is clipped at the paper's left edge. Cap its
+  width at 113.291px so it stays above the frame on larger screens.
+- Preserve the approved preview's gallery top, title position and section height.
+  The vector's bottom border reflects its native, shorter aspect ratio.
+- Preserve all seven supplied photographs in attachment order, 3-column/2-row
+  preview, 3:4 cells, 8px gaps, 10px corners, first-five entry points, +2 MORE
+  opening at 6/7, popup sizing, gestures, arrows, wrap and close.
+- Preserve all other text, fonts, photographs, audio, colors and interactions.
 
-## Preserved design and behavior
+## Verification and evidence
 
-Existing title, copy, fonts, ivory/brown colors, seven photographs in attachment
-order, three columns/two rows, 3:4 thumbnails, 8px gaps, 10px corners, gallery width,
-and +2 MORE overlay remain unchanged. First five thumbnails open their photo;
-MORE opens 6 / 7. Popup image sizing, gesture handlers, arrow controls, 7 → 1 and
-1 → 7 wrap, close, focus/scroll restoration and BGM remain unchanged.
-The decorative image has empty alt text, an aria-hidden parent and no pointer
-hit area, so gallery touch targets remain accessible and unobstructed.
+Chromium mobile at 320px, 390px and 509px passed SVG loading and source fidelity,
+frame ratio, transparent section layers, no horizontal overflow, unchanged
+approved gallery geometry, cocktail clipping and clearance, +2 MORE, next and
+previous wrap, close and no page exceptions. Canvas sampling confirms alpha 0
+outside the artwork and in the empty interior, and alpha 255 / RGB(241,237,231)
+in the banner. Seven non-target section HTML fragments remain identical.
 
-## Browser evidence and verification
+The latest captures were visually compared with the owner's reference: the hand
+stays above the frame, the grey ribbon meets the curved banner edge, and the
+banner hides the grey artwork without adding a rectangular section background.
+No remaining P0/P1/P2 findings in the approved scope.
 
-Actual Chromium mobile captures at 320 × 780 and 390 × 780 CSS px, DPR 2:
+Pages build (including TypeScript), existing automated tests and zero-warning
+lint passed for the approved source. Uploaded, public and exported SVG bytes
+match. Tests were completed before approval; the deployment workflow repeats the
+Pages build and automated tests for the committed revision.
 
-- `/workspace/wedding-gallery-frame-verification/production-7-320/gallery.png`
-- `/workspace/wedding-gallery-frame-verification/production-7-390/gallery.png`
-- `results-7.json`, traces, videos and all seven popup captures alongside them.
+Evidence: `/workspace/wedding-gallery-vector-preview/preview-320.png`,
+`preview-390.png`, `preview-509.png`, complete `boundary-*` and `gallery-*`
+captures, `results.json` and `gallery-vector-preview.mjs`.
 
-The latest screenshot and uploaded reference were visually inspected. At both
-widths the complete frame is visible without stretching; its seal/ribbon stays
-above the heading, the side ornaments stay clear of photo cells, and the bottom
-ornament clears the grid. The paper remains ivory rather than the JPEG's white.
-No remaining P0/P1/P2 visual findings in the requested scope.
-
-Twelve browser check groups pass across both widths: correct frame URL/loading,
-720:1280 ratio, content safe areas, non-intercepting decoration; grid dimensions,
-fonts/images and no horizontal overflow; all first-five thumbnail entry points;
-MORE center/edge hit areas and 6 / 7 start; all seven popup images in order and
-both wrap directions; central/near-edge horizontal swipes, vertical/diagonal/tap
-rejection, close/focus/scroll restoration, BGM continuity, no page exceptions or
-local request failures. The build, TypeScript, zero-warning lint and eight
-existing automated tests pass. All eight non-gallery sections have identical
-exported markup, and no previously committed photos/fonts/audio were modified.
+## Verification limits
 
 Real iOS Safari system-edge gestures and direct production-origin visual checks
-remain unverified in this restricted environment. GitHub Actions confirms Pages
-publication; the local browser uses the actual Pages build output.
-
-## Timeline/gallery overlap adjustment
-
-The owner requested the gallery to cover the end of the timetable as before.
-Only `.inv-gallery { margin-top: -46px; }` changes the rendered layout. At both
-320px and 390px, the gallery starts exactly 46px above the timetable's bottom and
-its existing ivory background masks the lower artwork. The last 19:30 schedule
-text remains visible. All nine sections' exported HTML is unchanged, as are
-frame ratio, gallery dimensions, image assets and interaction handlers. The next
-section naturally moves up with the gallery's position in document flow.
-Screenshots `/workspace/wedding-gallery-overlap-verification/boundary-320.png`
-and `boundary-390.png` plus `results.json` confirm the overlap, no horizontal
-overflow, and working +2 MORE, popup open/close and bidirectional wrap. Pages
-build, TypeScript and existing automated tests pass; lint has zero warnings.
-
-## Transparent gallery background (latest)
-
-The owner requested the selected gallery section's background to be transparent.
-Remove its opaque paper background and use `isolation: auto` so the frame's
-existing multiply blend can reach the underlying paper and timetable. Set only
-the decorative frame to z-index 0, keeping the content at its existing z-index 1.
-This supersedes the opaque timetable masking described in the prior adjustment:
-the -46px overlap is retained and timetable artwork now shows through the frame
-background. The supplied frame file, all photographs, every section's HTML,
-section geometry and gesture handlers remain unchanged.
-
-At both 320px and 390px the computed gallery background is rgba(0,0,0,0), the
-underlying timetable is visible in the overlap, the paper stays ivory without a
-white JPEG rectangle, and the frame keeps its natural aspect ratio. Photo crops
-are visually unchanged; comparing opaque and transparent browser renderings has
-mean per-channel difference below 0.01/255 from compositing. The 3-column preview,
-+2 MORE opening 6/7, next/previous wrap and close pass without page exceptions or
-horizontal overflow. Build/type checking, existing tests and zero-warning lint
-pass. Latest screenshots and results are under
-`/workspace/wedding-gallery-transparent-verification/` (boundary-320.png,
-boundary-390.png, gallery captures, results.json). No remaining P0/P1/P2 findings.
-
-## Explicit section-layer background reset (latest)
-
-The owner clarified that the section layer must have no color and the timetable
-ending must remain visible beneath the gallery frame; the page's ivory backdrop
-and the supplied frame asset must stay intact. The gallery rule now explicitly
-uses `.inv-section.inv-gallery { background: none; }`, retaining isolation:auto,
-the frame's existing multiply blend and the exact -46px overlap. This makes the
-absence of a section background explicit with higher specificity. The prior
-build already computed transparent locally; this does not establish what an
-already-open production browser tab was showing. No frame conversion is needed.
-
-At 320px, 390px and the reported 509px viewport width, all nine section layers
-compute transparent with no background image, while the page containers retain
-rgb(244,240,231). Browser screenshots visibly show the timetable's hand and ribbon
-through the 46px overlap. A comparison with a deliberately opaque section color
-confirms that those pixels are no longer covered. Gallery geometry, +2 MORE,
-photo wrap and close pass; no page exceptions or horizontal overflow occur.
-Build/type checks, existing automated tests and lint pass. Evidence:
-`/workspace/wedding-gallery-layer-verification/boundary-390.png`, corresponding
-320/509 captures, `results.json`, and the isolated opaque comparison captures.
-Direct production-origin visual inspection remains blocked by network policy;
-Pages publication is checked through GitHub Actions.
+remain unverified in this restricted environment. Local browser verification
+uses the actual Pages output. Deployment is checked through GitHub Actions.
