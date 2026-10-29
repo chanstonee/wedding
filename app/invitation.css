@@ -392,17 +392,18 @@ body:has(.wedding-invitation)::before {
   width: calc(272 * var(--inv-unit));
   max-width: 100%;
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: clamp(12px, calc(16 * var(--inv-unit)), 20px);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
   position: relative;
   z-index: 1;
 }
 .inv-photo-grid button {
+  position: relative;
   padding: 0;
   overflow: hidden;
-  border-radius: 20px;
+  border-radius: 10px;
   background: #ded8cf;
-  aspect-ratio: 128/160.196;
+  aspect-ratio: 3 / 4;
 }
 .inv-photo-grid img {
   width: 100%;
@@ -412,6 +413,28 @@ body:has(.wedding-invitation)::before {
 }
 .inv-photo-grid button:hover img {
   transform: scale(1.045);
+}
+.inv-photo-more-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  background: rgba(96, 78, 77, 0.66);
+  color: var(--inv-paper);
+  pointer-events: none;
+}
+.inv-photo-more-overlay strong {
+  font-size: clamp(20px, calc(24 * var(--inv-unit)), 28px);
+  font-weight: 400;
+  line-height: 1;
+}
+.inv-photo-more-overlay > span {
+  font-size: 10px;
+  line-height: 1.2;
+  letter-spacing: 1px;
 }
 .inv-gifts {
   padding-top: 180px;

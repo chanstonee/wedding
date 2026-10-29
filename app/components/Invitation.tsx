@@ -12,6 +12,7 @@ import {
 } from "react";
 
 import WeddingMusic, { type WeddingMusicHandle } from "./WeddingMusic";
+import { galleryPhotoFiles, getGalleryPreview, getNextPhotoIndex } from "../lib/gallery.mjs";
 import artwork from "../../figma-assets.json";
 
 const artworkWidths = new Map(
@@ -24,7 +25,8 @@ const artworkWidths = new Map(
 const publicBasePath = process.env.NEXT_PUBLIC_SITE_BASE_PATH ?? "";
 const asset = (section: number, name = "img", extension = "svg") =>
   `${publicBasePath}/assets/invitation/section-${section}-${name}.${extension}`;
-const photo = asset(5, "img", "jpg");
+const photos = galleryPhotoFiles.map((path) => `${publicBasePath}/${path}`);
+const previewPhotos = getGalleryPreview(photos);
 const venue = "퍼스트가든 · 해피가든";
 const address = "경기도 파주시 탑삭골길 260";
 const accounts = [
@@ -435,7 +437,7 @@ export default function Invitation() {
     if (guestName.trim()) openModal("rsvp");
   };
   const changePhoto = (direction: number) =>
-    setPhotoIndex((index) => (index + direction + 4) % 4);
+    setPhotoIndex((index) => getNextPhotoIndex(index, direction, photos.length));
   const shareResponse = async () => {
     if (!navigator.share) {
       await copy(
@@ -628,22 +630,29 @@ export default function Invitation() {
             기억에 담아둔 우리의 순간들.
           </p>
           <div className="inv-photo-grid">
-            {[0, 1, 2, 3].map((index) => (
+            {previewPhotos.map(({ src, index, moreCount }) => (
               <button
-                key={index}
+                key={src}
+                type="button"
                 onClick={() => {
                   setPhotoIndex(index);
                   openModal("gallery");
                 }}
-                aria-label={`웨딩스냅 ${index + 1} 크게 보기`}
+                aria-label={moreCount > 0 ? `웨딩스냅 ${moreCount}장 더보기` : `웨딩스냅 ${index + 1} 크게 보기`}
               >
                 {/* eslint-disable-next-line @next/next/no-img-element -- Keep native photo sizing and lazy loading in the static export. */}
                 <img
-                  src={photo}
+                  src={src}
                   alt={`재훈과 다연의 웨딩스냅 ${index + 1}`}
                   loading="lazy"
                   decoding="async"
                 />
+                {moreCount > 0 && (
+                  <span className="inv-photo-more-overlay" aria-hidden="true">
+                    <strong>+{moreCount}</strong>
+                    <span>MORE</span>
+                  </span>
+                )}
               </button>
             ))}
           </div>
@@ -923,13 +932,13 @@ export default function Invitation() {
             }}
           >
             {/* eslint-disable-next-line @next/next/no-img-element -- The lightbox uses native image dimensions with viewport-constrained CSS. */}
-            <img src={photo} alt={`재훈과 다연의 웨딩스냅 ${photoIndex + 1}`} />
+            <img src={photos[photoIndex]} alt={`재훈과 다연의 웨딩스냅 ${photoIndex + 1}`} />
           </div>
           <div className="inv-lightbox-nav">
             <button onClick={() => changePhoto(-1)} aria-label="이전 사진">
               ←
             </button>
-            <span aria-live="polite">{photoIndex + 1} / 4</span>
+            <span aria-live="polite">{photoIndex + 1} / {photos.length}</span>
             <button onClick={() => changePhoto(1)} aria-label="다음 사진">
               →
             </button>

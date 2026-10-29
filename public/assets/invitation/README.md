@@ -1,6 +1,7 @@
 Original artwork exported from the owner's Figma design, node 29:4263.
 Files section-0 through section-9 preserve the supplied SVG/JPEG exports without changes.
-The four gallery slots intentionally use the same photograph present in Figma.
+The original Figma gallery reused one photograph. The current gallery displays
+each real photo once; its ordered list is maintained in app/lib/gallery.mjs.
 
 Fonts:
 - Designhouse OTF Bold — Designhouse, original unmodified OTF.
