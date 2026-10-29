@@ -184,7 +184,7 @@ export default function Guestbook({ enabled, onModalChange, onNotice }: {
       {loading && <p className="gb-status" role="status">축하의 마음을 불러오고 있어요.</p>}
       {error && <div className="gb-status"><p role="alert">{error}</p><button className="inv-cta" type="button" onClick={() => void load()} disabled={loading}>다시 불러오기</button></div>}
       {loaded && !entries.length && !loading && <p className="gb-status">아직 등록된 메시지가 없습니다.</p>}
-      {current && <button className="gb-delete inv-cta" type="button" onClick={() => open(current)} aria-label={`${current.name}님의 메시지 삭제`}>메시지 삭제</button>}
+      {current && <button className="gb-delete" type="button" onClick={() => open(current)} aria-label={`${current.name}님의 메시지 삭제`}>메시지 삭제</button>}
       <button className="gb-write inv-cta inv-cta--blue" type="button" onClick={() => open("write")}>축하 메시지 남기기</button>
       {modal && <GuestbookModal title={modal === "write" ? "축하 메시지 남기기" : "메시지 삭제"} busy={busy} close={close}>
         <form onSubmit={submit} className="gb-form" aria-busy={busy}>
