@@ -77,6 +77,7 @@ function Art({
   className?: string;
 }) {
   return (
+    // eslint-disable-next-line @next/next/no-img-element -- Preserve native sizing and original asset URLs in the static Pages export.
     <img
       className={className}
       src={asset(section, name)}
@@ -224,7 +225,7 @@ function Dialog({
   children: ReactNode;
   className?: string;
   onArrow?: (direction: number) => void;
-  returnFocus: HTMLElement | null;
+  returnFocus: RefObject<HTMLElement | null>;
 }) {
   const ref = useRef<HTMLDivElement>(null),
     close = useRef<HTMLButtonElement>(null),
@@ -233,7 +234,7 @@ function Dialog({
     arrow.current = onArrow;
   }, [onArrow]);
   useEffect(() => {
-    const previous = returnFocus;
+    const previous = returnFocus.current;
     close.current?.focus({ preventScroll: true });
     const keydown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
@@ -348,6 +349,7 @@ function Curtain({
     <div className={`inv-curtain ${opening ? "is-opening" : ""}`}>
       {["left", "right"].map((side) => (
         <div key={side} className={`inv-curtain-panel inv-curtain-${side}`} aria-hidden="true">
+          {/* eslint-disable-next-line @next/next/no-img-element -- Keep the curtain's existing cover sizing and static asset URL. */}
           <img src={`${publicBasePath}/assets/invitation/curtain.png`} alt="" width="359" height="594" />
         </div>
       ))}
@@ -630,6 +632,7 @@ export default function Invitation() {
                 }}
                 aria-label={`웨딩스냅 ${index + 1} 크게 보기`}
               >
+                {/* eslint-disable-next-line @next/next/no-img-element -- Keep native photo sizing and lazy loading in the static export. */}
                 <img
                   src={photo}
                   alt={`재훈과 다연의 웨딩스냅 ${index + 1}`}
@@ -843,7 +846,7 @@ export default function Invitation() {
         <Dialog
           title="길 안내"
           onClose={closeModal}
-          returnFocus={returnFocus.current}
+          returnFocus={returnFocus}
           className="inv-map-overlay"
         >
           <p className="inv-caption">이용하실 지도를 선택해 주세요.</p>
@@ -873,7 +876,7 @@ export default function Invitation() {
         <Dialog
           title="웨딩스냅"
           onClose={closeModal}
-          returnFocus={returnFocus.current}
+          returnFocus={returnFocus}
           className="inv-lightbox"
           onArrow={changePhoto}
         >
@@ -891,6 +894,7 @@ export default function Invitation() {
               }
             }}
           >
+            {/* eslint-disable-next-line @next/next/no-img-element -- The lightbox uses native image dimensions with viewport-constrained CSS. */}
             <img src={photo} alt={`재훈과 다연의 웨딩스냅 ${photoIndex + 1}`} />
           </div>
           <div className="inv-lightbox-nav">
@@ -908,7 +912,7 @@ export default function Invitation() {
         <Dialog
           title="참석 여부 전달"
           onClose={closeModal}
-          returnFocus={returnFocus.current}
+          returnFocus={returnFocus}
         >
           <p>아래 내용을 신랑·신부에게 보내 주세요.</p>
           <div className="inv-response">

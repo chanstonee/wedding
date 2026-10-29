@@ -38,10 +38,10 @@ node --test tests/*.test.mjs
 
 다른 저장소 이름을 사용하면 `PAGES_BASE_PATH`를 변경하세요. 사용자 도메인에서는 빈 값을 사용할 수 있습니다.
 
-기존 `/admin/` 방명록 관리 페이지와 Supabase 설정은 유지하며, 새 초대장에는 방명록 섹션을 노출하지 않습니다. 관련 설정은 [Supabase 안내](docs/guestbook-setup.md)에 있습니다.
+현재 청첩장은 관리자 로그인과 Supabase 연결을 사용하지 않으며, 별도 환경변수 없이 실행할 수 있습니다. 이전 `/admin/` 라우트는 제거했습니다. 기존 방명록 데이터베이스의 스키마·권한 SQL은 [보존 기록](supabase/README.md)으로 남겨 두며, 외부 서비스의 데이터는 변경하지 않습니다.
 
 ## 이전 디자인 분리
 
-이 저장소는 현재 Figma 청첩장과 배포 중인 관리자 페이지의 소스만 관리합니다. 이전 분홍·블루 민트 테마, 옛 화면 소스, 불필요한 스타터 예제는 [Wedding-Invitation](https://github.com/chanstonee/Wedding-Invitation)에 보관했습니다. 파일 이동 목록은 해당 저장소의 `archive/separation-manifest.json`을 확인하세요.
+이 저장소는 현재 Figma 청첩장의 소스를 관리합니다. 이전 분홍·블루 민트 테마, 옛 화면 소스, 불필요한 스타터 예제는 [Wedding-Invitation](https://github.com/chanstonee/Wedding-Invitation)에 보관했습니다. 파일 이동 목록은 해당 저장소의 `archive/separation-manifest.json`을 확인하세요.
 
-이번 파일 정리 커밋에는 `[skip ci]`를 사용하므로 현재 공개된 사이트는 다시 배포하지 않습니다.
+이전 디자인 분리 커밋에는 `[skip ci]`를 사용했으며, 이후 `main` 변경은 위 Pages 워크플로로 배포합니다.

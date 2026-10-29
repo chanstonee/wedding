@@ -46,15 +46,8 @@ test("all original Figma assets are local and the exported page has no temporary
   assert.doesNotMatch(html, /figma\.com\/api\/mcp\/asset/);
 });
 
-test("exports a separate admin page without indexing or private guestbook data", async () => {
-  const html = await readFile(new URL("admin/index.html", output), "utf8");
-  assert.match(html, /<title>방명록 관리<\/title>/);
-  assert.match(html, /name="robots" content="noindex, nofollow"/);
-  assert.match(html, /name="referrer" content="no-referrer"/);
-  assert.ok(html.includes(`href="${basePath}/"`));
-  assert.ok(html.includes(`${basePath}/_next/`));
-  assert.doesNotMatch(html, /class="guestbook-message"|class="guestbook-entry/);
-  assert.match(html, /관리자 확인|연결 설정이 필요해요|로그인을 확인하는 중/);
+test("does not export the retired admin route", async () => {
+  await assert.rejects(access(new URL("admin/", output)), { code: "ENOENT" });
 });
 
 test("ships the MP3 player before the curtain opens with the correct Pages path", async () => {
