@@ -572,7 +572,17 @@ export default function Invitation() {
           <div className="inv-address">
             <Art section={3} name="imgImage1" />
             <p>
-              {address},<br />
+              {address},
+              <button
+                type="button"
+                className="inv-address-copy"
+                aria-label="주소 복사"
+                title="주소 복사"
+                onClick={() => copy(address, "주소를 복사했어요.")}
+              >
+                <Art section={6} name="imgIcon" />
+              </button>
+              <br />
               해피가든
             </p>
           </div>

@@ -122,3 +122,24 @@ Real Safari and physical-device FPS remain unverified. No new push/deployment.
 Evidence: `/workspace/wedding-hero-motion-stronger-verification/` contains the
 animated SVG, old/new SVG comparison HTML, phase PNGs, traces, CSS and detailed
 JSON checks. Source: docs/hero-motion.md. No remaining P0/P1/P2 findings in scope.
+
+## Address-only copy icon: latest pending preview
+
+Add a compact icon button immediately after the displayed street address. Reuse
+the invitation's existing brown SVG copy icon and copyText helper. The button's
+accessible label/title is 주소 복사 and its action copies only the existing address
+constant, without the comma, venue name or other text. Success/failure use the
+existing polite live-status toast. Address/venue wording and map links are kept.
+
+At 320px and 390px the address and 18px icon stay on the same line without
+horizontal overflow. The transparent button target is 32×28px and keyboard
+focus uses the existing outline. Both screenshots were visually reviewed.
+Native Clipboard API and real execCommand fallback both write exactly
+경기도 파주시 탑삭골길 260. Enter activation, truthful failure feedback, temporary
+field cleanup and focus/scroll preservation pass. Existing map popup/all three
+links, account-number copying and BGM remain functional. No JS or local HTTP
+errors occur. Eight other section HTML fragments are identical. Build/type
+checks, existing automated tests and zero-warning lint pass. Real Safari is
+unverified. Evidence: `/workspace/wedding-address-copy-verification/` (venue
+screenshots, copied-state captures, results.json and traces). No push/deployment
+has been attempted for this preview. No remaining P0/P1/P2 findings in scope.

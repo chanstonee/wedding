@@ -373,6 +373,21 @@ body:has(.wedding-invitation)::before {
 .inv-address img {
   flex-shrink: 0;
 }
+.inv-address-copy {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 28px;
+  margin-left: 2px;
+  padding: 5px 7px;
+  vertical-align: middle;
+  background: transparent;
+}
+.inv-address-copy img {
+  width: 18px;
+  height: 18px;
+}
 .inv-timeline {
   /* Keep the hand above the frame while the ribbon continues behind it. */
   height: 742px;
