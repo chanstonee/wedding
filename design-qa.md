@@ -91,3 +91,26 @@ horizontal overflow. Build/type checking, existing tests and zero-warning lint
 pass. Latest screenshots and results are under
 `/workspace/wedding-gallery-transparent-verification/` (boundary-320.png,
 boundary-390.png, gallery captures, results.json). No remaining P0/P1/P2 findings.
+
+## Explicit section-layer background reset (latest)
+
+The owner clarified that the section layer must have no color and the timetable
+ending must remain visible beneath the gallery frame; the page's ivory backdrop
+and the supplied frame asset must stay intact. The gallery rule now explicitly
+uses `.inv-section.inv-gallery { background: none; }`, retaining isolation:auto,
+the frame's existing multiply blend and the exact -46px overlap. This makes the
+absence of a section background explicit with higher specificity. The prior
+build already computed transparent locally; this does not establish what an
+already-open production browser tab was showing. No frame conversion is needed.
+
+At 320px, 390px and the reported 509px viewport width, all nine section layers
+compute transparent with no background image, while the page containers retain
+rgb(244,240,231). Browser screenshots visibly show the timetable's hand and ribbon
+through the 46px overlap. A comparison with a deliberately opaque section color
+confirms that those pixels are no longer covered. Gallery geometry, +2 MORE,
+photo wrap and close pass; no page exceptions or horizontal overflow occur.
+Build/type checks, existing automated tests and lint pass. Evidence:
+`/workspace/wedding-gallery-layer-verification/boundary-390.png`, corresponding
+320/509 captures, `results.json`, and the isolated opaque comparison captures.
+Direct production-origin visual inspection remains blocked by network policy;
+Pages publication is checked through GitHub Actions.

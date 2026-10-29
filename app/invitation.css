@@ -371,8 +371,9 @@ body:has(.wedding-invitation)::before {
   font-size: 17px;
   line-height: 28px;
 }
-.inv-gallery {
+.inv-section.inv-gallery {
   margin-top: -46px;
+  background: none;
   /* Let the frame blend with the paper and overlapping timetable below it. */
   isolation: auto;
   /* Place the title below the supplied frame's central ribbon. */
