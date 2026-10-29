@@ -5,6 +5,10 @@ each real photo once; its ordered list is maintained in app/lib/gallery.mjs.
 gallery/photo-01.jpg through photo-07.jpg are the owner's seven uploaded photos,
 preserved without re-encoding and listed in the attachment order. The original
 section-5-img.jpg remains unchanged as part of the original Figma assets.
+gallery-frame.jpg is the owner's uploaded ribbon border, preserved byte-for-byte.
+The attachment was delivered as a 720 × 1280 JPEG with a white background.
+Only the gallery blends that white background into the existing ivory paper;
+the original cloud frame and separate ribbon exports remain archived here.
 
 Fonts:
 - Designhouse OTF Bold — Designhouse, original unmodified OTF.

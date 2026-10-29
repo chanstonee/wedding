@@ -372,18 +372,20 @@ body:has(.wedding-invitation)::before {
   line-height: 28px;
 }
 .inv-gallery {
-  padding-top: 64px;
+  background: var(--inv-paper);
+  /* Place the title below the supplied frame's central ribbon. */
+  padding-top: calc(176 * var(--inv-unit));
   padding-bottom: 84px;
-  min-height: max(642px, calc(642 * var(--inv-unit)));
+  min-height: max(642px, calc(1280 / 720 * 390 * var(--inv-unit)));
 }
 .inv-gallery-border {
   position: absolute;
-  left: 50%;
-  top: -35.64px;
+  inset: 0 0 auto;
   z-index: -1;
-  width: calc(402 * var(--inv-unit));
-  transform: translateX(-50%);
+  width: 100%;
   pointer-events: none;
+  /* The supplied JPEG has a white background; blend it into the ivory paper. */
+  mix-blend-mode: multiply;
 }
 .inv-gallery-border img {
   width: 100%;

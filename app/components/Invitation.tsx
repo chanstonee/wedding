@@ -614,15 +614,16 @@ export default function Invitation() {
           aria-labelledby="gallery-title"
         >
           <div className="inv-gallery-border" aria-hidden="true">
-            <Art section={5} name="imgUnion" />
+            {/* eslint-disable-next-line @next/next/no-img-element -- Keep the supplied frame at its original aspect ratio. */}
+            <img
+              src={`${publicBasePath}/assets/invitation/gallery-frame.jpg`}
+              alt=""
+              width={720}
+              height={1280}
+              draggable={false}
+              decoding="async"
+            />
           </div>
-          <Decoration
-            section={5}
-            name="imgVector"
-            x={293}
-            y={50}
-            rotate={5.19}
-          />
           <h2 id="gallery-title">우리의 웨딩스냅</h2>
           <p>
             함께 웃고, 서로를 바라보며
