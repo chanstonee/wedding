@@ -1,0 +1,28 @@
+/* Shared filled CTA family; utility/navigation controls retain their own hit areas. */
+.wedding-invitation .inv-cta {
+  --inv-cta-fill: var(--inv-body);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 48px;
+  padding: 12px 16px;
+  border: 1px solid var(--inv-cta-fill);
+  border-radius: 4px;
+  background: var(--inv-cta-fill);
+  color: var(--inv-paper);
+  font: 500 16px/24px "Pretendard", sans-serif;
+  text-align: center;
+  text-decoration: none;
+  transition: filter 160ms ease;
+}
+.wedding-invitation .inv-cta--blue { --inv-cta-fill: #555e6d; }
+.wedding-invitation .inv-cta::before { content: none; }
+.wedding-invitation .inv-cta:hover { background: var(--inv-cta-fill); filter: brightness(.94); }
+.wedding-invitation .inv-cta:disabled { opacity: .6; cursor: default; filter: none; }
+.wedding-invitation .inv-cta img { filter: brightness(0) invert(1); }
+.wedding-invitation .inv-map-options .inv-cta { justify-content: space-between; text-align: left; }
+.wedding-invitation .inv-map-options .inv-cta small { color: inherit; opacity: .85; }
+.gb-status .inv-cta { margin-top: 8px; }
+@media (prefers-reduced-motion: reduce) { .wedding-invitation .inv-cta { transition: none; } }

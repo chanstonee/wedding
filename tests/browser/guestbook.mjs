@@ -40,7 +40,8 @@ async function fixture(width,options={},mode="messages") {
  await page.getByRole('button',{name:'초대장 열기',exact:true}).tap();
  await page.locator('.inv-curtain').waitFor({state:'detached'});
  await page.locator('.inv-guestbook').scrollIntoViewIfNeeded();
- if(mode==='messages')await page.locator('.gb-slide').nth(2).waitFor();
+ if(mode==='messages'){await page.locator('.gb-slide').nth(2).waitFor();await page.locator('.gb-track').evaluate(e=>Promise.all(e.getAnimations().map(a=>a.finished)));}
+ else if(mode==='single')await page.locator('.gb-author').waitFor();
  else if(mode==='empty')await page.getByText('아직 등록된 메시지가 없습니다.',{exact:true}).waitFor();
  else await page.locator('.gb-status [role=alert]').waitFor({timeout:25000});
  h.advance(3000);
@@ -62,6 +63,17 @@ for(const width of [320,390]) {
  assert.equal(await page.locator('.inv-section').count(),10);
  assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);
  assert.equal(await page.locator('.inv-section').last().getAttribute('class'),'inv-section inv-ending');
+ assert.equal(await page.locator('.inv-guestbook').evaluate(e=>getComputedStyle(e).paddingBottom),'0px');
+ const peek=await page.locator('.gb-carousel').evaluate(carousel=>{
+  const viewport=carousel.getBoundingClientRect(),slides=carousel.querySelectorAll('.gb-slide');
+  const first=slides[0].getBoundingClientRect(),next=slides[1].getBoundingClientRect();
+  return {width:viewport.width,currentWidth:first.width,center:first.x+first.width/2-viewport.x,nextVisible:viewport.right-next.left};
+ });
+ assert(peek.currentWidth<peek.width&&peek.nextVisible>20,'multiple messages reveal the next plate');
+ assert(Math.abs(peek.center-peek.width/2)<1,'current plate remains centered: '+JSON.stringify(peek));
+ const ctas=await page.locator('.inv-cta').evaluateAll(buttons=>buttons.map(e=>{const s=getComputedStyle(e);return {radius:s.borderRadius,fill:s.backgroundColor,font:s.fontSize,height:s.minHeight};}));
+ assert(ctas.length>=5);for(const cta of ctas){assert.equal(cta.radius,'4px');assert(['rgb(96, 78, 77)','rgb(85, 94, 109)'].includes(cta.fill));assert.equal(cta.font,'16px');assert.equal(cta.height,'48px');}
+
  assert.equal(await page.locator('.gb-frame').first().evaluate(e=>e.complete&&e.naturalWidth===1254),true);
  assert.equal(await page.locator('.gb-author').first().textContent(),'From. 친구');
  await screenshot(page,'guestbook-'+width);
@@ -77,7 +89,16 @@ for(const width of [320,390]) {
  });
  assert.equal(longInfo.chars,100);assert(longInfo.clientHeight>12,'long-message reading viewport must remain usable');
  assert(longInfo.text.y+longInfo.text.height<=longInfo.card.y+longInfo.card.height*.73);
- await page.locator('.gb-slide').nth(1).locator('.gb-message').evaluate(e=>{e.scrollTop=e.scrollHeight});
+ const longSlide=page.locator('.gb-slide').nth(1);
+ assert.equal(await longSlide.locator('.gb-message').evaluate(e=>e.scrollTop),0);
+ await longSlide.locator('.gb-scroll-track').waitFor({state:'visible'});
+ const initialThumb=await longSlide.locator('.gb-scroll-track > span').evaluate(e=>({top:e.style.top,height:parseFloat(e.style.height)}));
+ assert.equal(initialThumb.top,'0%');assert(initialThumb.height>0&&initialThumb.height<100);
+ assert.equal(await page.locator('.gb-scroll-hint').count(),0);
+ await longSlide.screenshot({path:out+'/scrollbar-initial-'+width+'.png'});
+ await longSlide.locator('.gb-message').evaluate(e=>{e.scrollTop=e.scrollHeight});
+ await page.waitForFunction(()=>parseFloat(document.querySelectorAll('.gb-slide')[1].querySelector('.gb-scroll-track > span').style.top)>0);
+
  assert(await page.locator('.gb-slide').nth(1).locator('.gb-message').evaluate(e=>e.scrollTop>0));
  await screenshot(page,'guestbook-long-'+width);
  await touchSwipe(page,85,0,'left');assert.equal(await page.locator('.gb-pagination p').textContent(),'1 / 3');
@@ -147,7 +168,8 @@ for(const width of [320,390]) {
  await page.locator('audio').evaluate(e=>{e.currentTime=e.duration-.2;});await page.waitForTimeout(800);
  assert.equal(await page.locator('audio').evaluate(e=>!e.paused&&e.currentTime<2),true);
  await page.getByRole('button',{name:'지도 바로가기',exact:true}).scrollIntoViewIfNeeded();await page.getByRole('button',{name:'지도 바로가기',exact:true}).tap();
- assert.equal(await page.locator('.inv-map-options a').count(),3);await page.getByRole('button',{name:'길 안내 닫기',exact:true}).tap();
+ assert.equal(await page.locator('.inv-map-options a').count(),3);
+ assert.equal(await page.locator('.inv-map-options a').first().evaluate(e=>getComputedStyle(e).borderRadius),'4px');await page.getByRole('button',{name:'길 안내 닫기',exact:true}).tap();
  await page.locator('.inv-account-toggle').first().scrollIntoViewIfNeeded();await page.locator('.inv-account-toggle').first().tap();
  assert.equal(await page.locator('.inv-account-toggle').first().getAttribute('aria-expanded'),'true');
  await page.locator('.inv-account-toggle').first().tap();
@@ -155,9 +177,17 @@ for(const width of [320,390]) {
  const broken=await page.evaluate(()=>[...document.images].filter(e=>!e.complete||e.naturalWidth===0).map(e=>e.src));assert.deepEqual(broken,[]);
  assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);
  assert.deepEqual(c.errors,[]);
- results.push({width,status:'passed',storage:'LOCAL GAS/SHEETS ADAPTER',longInfo,checks:['frame original PNG and safe text bounds','100-character message scroll','center and near-edge horizontal touch','vertical/diagonal/short touch rejection','no history navigation','write and delete including wrong password; duplicate submit ignored','modal scroll restoration and inert/focus structure','400px keyboard-height simulation','actual address clipboard','existing gallery opens/closes','BGM play/pause and actual loop boundary; map modal and account accordion','no broken images/overflow/console errors']});
+ results.push({width,status:'passed',storage:'LOCAL GAS/SHEETS ADAPTER',longInfo,checks:['frame original PNG and safe text bounds; centered plate with adjacent preview; bottom padding 0','100-character scroll with always-visible initial track and moving thumb','center and near-edge horizontal touch','vertical/diagonal/short touch rejection','no history navigation','write and delete including wrong password; duplicate submit ignored','modal scroll restoration and inert/focus structure','400px keyboard-height simulation','actual address clipboard; shared brown/blue filled CTA family with 4px corners','existing gallery opens/closes','BGM play/pause and actual loop boundary; map modal and account accordion','no broken images/overflow/console errors']});
  await context.tracing.stop({path:out+'/guestbook-'+width+'.zip'});await context.close();
 }
+// Single-entry layout uses the full frame, without an artificial neighboring copy.
+h.sheet().rows.splice(2);h.context.invalidateList_();
+const single=await fixture(320,{},'single');
+assert.equal(await single.page.locator('.gb-pagination').count(),0);
+assert.equal(await single.page.locator('.gb-carousel').evaluate(e=>e.classList.contains('is-multiple')),false);
+assert.equal(await single.page.locator('.gb-slide').count(),1);
+await screenshot(single.page,'guestbook-single-320');
+await single.context.tracing.stop({path:out+'/guestbook-single.zip'});await single.context.close();
 // Empty and failed connections must not manufacture saved messages.
 h.sheet().rows.splice(1);h.context.invalidateList_();
 const empty=await fixture(320,{},'empty');

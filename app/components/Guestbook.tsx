@@ -80,17 +80,25 @@ function GuestbookModal({ title, busy, close, children }: {
 
 function MessageCard({ entry }: { entry?: Entry }) {
   const message = useRef<HTMLParagraphElement>(null);
-  const [scrollable, setScrollable] = useState(false);
+  const [scroll, setScroll] = useState({ visible: false, height: 100, top: 0 });
+  const measure = useCallback(() => {
+    const element = message.current;
+    if (!element) return;
+    const visible = element.scrollHeight > element.clientHeight + 1;
+    const height = visible ? Math.max(18, element.clientHeight / element.scrollHeight * 100) : 100;
+    const top = visible ? element.scrollTop / (element.scrollHeight - element.clientHeight) * (100 - height) : 0;
+    setScroll((previous) => previous.visible === visible && Math.abs(previous.height - height) < .1 && Math.abs(previous.top - top) < .1
+      ? previous : { visible, height, top });
+  }, []);
   useEffect(() => {
     const element = message.current;
     if (!element) return;
-    const measure = () => setScrollable(element.scrollHeight > element.clientHeight + 1);
     const observer = new ResizeObserver(measure);
     observer.observe(element);
     void document.fonts.ready.then(measure);
     measure();
     return () => observer.disconnect();
-  }, [entry]);
+  }, [entry, measure]);
   return (
     <div className="gb-card">
       {/* eslint-disable-next-line @next/next/no-img-element -- Preserve the supplied PNG without cropping or distortion. */}
@@ -98,8 +106,10 @@ function MessageCard({ entry }: { entry?: Entry }) {
       <div className="gb-card-text">
         {entry ? <>
           <p className={`gb-author${count(entry.name) > 10 ? " gb-author-long" : ""}`}>From. {entry.name}</p>
-          <p ref={message} className="gb-message" tabIndex={scrollable ? 0 : undefined} aria-label={scrollable ? "축하 메시지, 위아래로 스크롤하여 전체 읽기" : undefined}>{entry.message}</p>
-          {scrollable && <small className="gb-scroll-hint">위아래로 읽어주세요</small>}
+          <div className={`gb-message-region${scroll.visible ? " is-scrollable" : ""}`}>
+            <p ref={message} className="gb-message" onScroll={measure} tabIndex={scroll.visible ? 0 : undefined} aria-label={scroll.visible ? "스크롤 가능한 축하 메시지" : undefined}>{entry.message}</p>
+            {scroll.visible && <span className="gb-scroll-track" aria-hidden="true"><span style={{ height: `${scroll.height}%`, top: `${scroll.top}%` }} /></span>}
+          </div>
           <time className="gb-date" dateTime={entry.createdAt}>{date(entry.createdAt)}</time>
         </> : <p className="gb-empty">첫 번째 축하의 마음을<br />남겨주세요.</p>}
       </div>
@@ -203,7 +213,7 @@ export default function Guestbook({ enabled, onModalChange, onNotice }: {
     <section className="inv-section inv-guestbook" aria-labelledby="guestbook-title" ref={section}>
       <h2 id="guestbook-title">GUEST BOOK</h2>
       <p className="gb-description">두 사람의 새로운 시작에<br />따뜻한 축하의 마음을 남겨주세요.</p>
-      <div className="gb-carousel" role="region" aria-roledescription="캐러셀" aria-label="축하 메시지"
+      <div className={`gb-carousel${entries.length > 1 ? " is-multiple" : ""}`} role="region" aria-roledescription="캐러셀" aria-label="축하 메시지"
         onPointerDown={(event) => {
           if (!event.isPrimary || event.button !== 0 || (event.target as HTMLElement).closest("button")) return;
           start.current = { id: event.pointerId, x: event.clientX, y: event.clientY, maxY: 0 };
@@ -216,7 +226,7 @@ export default function Guestbook({ enabled, onModalChange, onNotice }: {
           const dx = event.clientX - point.x, dy = Math.max(point.maxY, Math.abs(event.clientY - point.y));
           if (Math.abs(dx) >= 45 && Math.abs(dx) > dy * 1.6) void change(dx < 0 ? 1 : -1);
         }} onPointerCancel={() => { start.current = null; }}>
-        <div className="gb-track" style={{ transform: `translateX(-${index * 100}%)` }}>
+        <div className="gb-track" style={{ transform: entries.length > 1 ? `translateX(calc(${6 - index * 88}% + ${index * 12}px))` : "translateX(0)" }}>
           {entries.length ? entries.map((entry, position) => <div className="gb-slide" key={entry.id} inert={position !== index} aria-hidden={position !== index}>
             <MessageCard entry={entry} />
           </div>) : <div className="gb-slide"><MessageCard /></div>}
@@ -234,10 +244,10 @@ export default function Guestbook({ enabled, onModalChange, onNotice }: {
         </button>
       </div>}
       {loading && <p className="gb-status" role="status">축하의 마음을 불러오고 있어요.</p>}
-      {error && <div className="gb-status"><p role="alert">{error}</p><button type="button" onClick={() => void load()} disabled={loading}>다시 불러오기</button></div>}
+      {error && <div className="gb-status"><p role="alert">{error}</p><button className="inv-cta" type="button" onClick={() => void load()} disabled={loading}>다시 불러오기</button></div>}
       {loaded && !entries.length && !loading && <p className="gb-status">아직 등록된 메시지가 없습니다.</p>}
-      {current && <button className="gb-delete" type="button" onClick={() => open(current)} aria-label={`${current.name}님의 메시지 삭제`}>메시지 삭제</button>}
-      <button className="gb-write" type="button" onClick={() => open("write")}>축하 메시지 남기기</button>
+      {current && <button className="gb-delete inv-cta" type="button" onClick={() => open(current)} aria-label={`${current.name}님의 메시지 삭제`}>메시지 삭제</button>}
+      <button className="gb-write inv-cta inv-cta--blue" type="button" onClick={() => open("write")}>축하 메시지 남기기</button>
       {modal && <GuestbookModal title={modal === "write" ? "축하 메시지 남기기" : "메시지 삭제"} busy={busy} close={close}>
         <form onSubmit={submit} className="gb-form" aria-busy={busy}>
           {modal === "write" ? <>
@@ -253,7 +263,7 @@ export default function Guestbook({ enabled, onModalChange, onNotice }: {
             <div className="gb-honeypot" aria-hidden="true"><label htmlFor="gb-website">Website</label><input id="gb-website" name="website" tabIndex={-1} autoComplete="off" value={website} onChange={(event) => setWebsite(event.target.value)} /></div>
           </>}
           {formError && <p className="gb-form-error" role="alert">{formError}</p>}
-          <button className="gb-write" type="submit" disabled={busy}>{busy ? "처리하고 있어요…" : modal === "write" ? "메시지 등록하기" : "메시지 삭제하기"}</button>
+          <button className={`gb-write inv-cta${modal === "write" ? " inv-cta--blue" : ""}`} type="submit" disabled={busy}>{busy ? "처리하고 있어요…" : modal === "write" ? "메시지 등록하기" : "메시지 삭제하기"}</button>
         </form>
       </GuestbookModal>}
     </section>

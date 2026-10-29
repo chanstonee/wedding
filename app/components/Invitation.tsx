@@ -591,7 +591,7 @@ export default function Invitation() {
             </p>
           </div>
           <button
-            className="inv-double-button"
+            className="inv-double-button inv-cta"
             onClick={() => openModal("map")}
           >
             지도 바로가기
@@ -733,7 +733,7 @@ export default function Invitation() {
                       <p className="inv-account-number">{account.number}</p>
                       <p>예금주 {account.owner}</p>
                       <button
-                        className="inv-copy-button"
+                        className="inv-copy-button inv-cta"
                         onClick={() =>
                           copy(
                             account.number,
@@ -822,7 +822,7 @@ export default function Invitation() {
                 <p className="inv-caption inv-rsvp-note">
                   참석하시는 모든 분의 성함을 입력해 주세요.
                 </p>
-                <button type="submit" className="inv-double-button">
+                <button type="submit" className="inv-double-button inv-cta inv-cta--blue">
                   참석 여부 전달하기
                 </button>
               </form>
@@ -890,6 +890,7 @@ export default function Invitation() {
             {maps.map((map) => (
               <a
                 key={map.name}
+                className="inv-cta"
                 href={map.href}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -980,11 +981,11 @@ export default function Invitation() {
             <p className="inv-caption">2027. 05. 15 · {venue}</p>
           </div>
           <div className="inv-response-actions">
-            <button className="inv-double-button" onClick={shareResponse}>
+            <button className="inv-double-button inv-cta" onClick={shareResponse}>
               공유하기
             </button>
             <button
-              className="inv-copy-button"
+              className="inv-copy-button inv-cta"
               onClick={() =>
                 copy(
                   response,

@@ -1,66 +1,52 @@
-# Guestbook design QA — 2026-10-29 (Asia/Seoul)
+# Guestbook carousel and CTA refinement QA — 2026-10-29 (Asia/Seoul)
 
-Scope: the new guestbook before the ending and the address copy touch target. Existing invitation design, typography and artwork are the visual baseline. The supplied reference establishes a centered card carousel, not a replacement global design system.
+Scope: the four user-requested refinements to the deployed invitation: zero guestbook bottom padding, immediately visible message scrolling affordance, adjacent plate previews for multiple messages, and a shared filled CTA family.
 
-**Source visual truth**
+## Source and implementation
 
-- Original `plate2.png` from the user's `plate2.png.zip`, copied byte-for-byte to `public/assets/invitation/guestbook-frame.png`.
-- Source is 1254×1254 RGBA; transparent corners, no crop or recoloring. Width/height remain 1:1.
-- Existing Designhouse/Pretendard fonts, ivory `#f4f0e7`, brown `#604e4d`/`#866a6a`, existing indigo `#555e6d`.
+- Source artwork: unchanged `public/assets/invitation/guestbook-frame.png` (1254×1254 RGBA, byte-identical to the supplied ZIP).
+- Before state: `/workspace/wedding-guestbook-verification/ui/section-390.png`, captured from commit de0f12d.
+- After state: `/workspace/wedding-guestbook-refinement-verification/section-320.png` and `section-390.png`.
+- Combined before/after comparison: `/workspace/wedding-guestbook-refinement-verification/comparison.png`. Both 390px section captures are rendered at their CSS width of 390px from 780px-wide 2× screenshots. The deliberate size/spacing changes follow the new request.
+- Focused first-scroll state: `scrollbar-initial-320.png` and `scrollbar-initial-390.png` in the same new evidence directory. Captured at scrollTop 0, before any reading gesture.
+- Other focused states: `guestbook-single-320.png`, `guestbook-write-320.png`, `guestbook-short-viewport-320.png`, `guestbook-wrong-password-390.png`, `address-copy-390.png`.
+- Runtime: real built app in Chromium mobile/touch emulation, 320×780 and 390×780 CSS px, deviceScaleFactor 2. Google traffic is a local GAS/Sheets adapter; production has no mock data.
 
-**Implementation evidence**
+## Findings and fixes
 
-- Browser: Chromium with touch and mobile emulation at 320×780 and 390×780 CSS px, deviceScaleFactor 2.
-- Source/implementation side-by-side: `/workspace/wedding-guestbook-verification/ui/comparison.png` (900×920 px, 1× composition).
-- Actual card captures: `ui/card-320.png` (640×640 px) and `ui/card-390.png` (780×780 px). Compared at 320×320 and 390×390 CSS px against the source PNG at those same sizes.
-- Full section captures: `ui/section-320.png`, `ui/section-390.png`.
-- Focused states: `ui/guestbook-long-320.png`, `ui/guestbook-long-390.png`, `ui/guestbook-write-390.png`, `ui/guestbook-short-viewport-320.png`, `ui/guestbook-wrong-password-390.png`, `ui/address-copy-320.png`.
-- Empty/failure: `ui/guestbook-empty-320.png`, `ui/guestbook-connection-error-390.png`.
-- All `ui/` paths above are under `/workspace/wedding-guestbook-verification/`.
-- These are real rendered app screenshots using the real prepared Bridge/server code with a LOCAL Sheets/GAS adapter. They are not screenshots of live Google storage. Test messages are absent from production code.
+- The old native scrollbar could auto-hide and the old hint required reading a sentence. Removed that sentence, hid the platform-dependent native chrome, and show a track/thumb for overflowing messages immediately. The thumb is initially at the top and follows real scrollTop. The actual text remains a keyboard-focusable native scrolling paragraph.
+- The old carousel filled the viewport with one plate. Multiple-message slides now use 88% width, centered with a 6% inset and overlapping transparent image margins. A real neighboring plate edge is visible; there are no duplicated message records. Single/empty states remain full width.
+- The former styles mixed double borders, transparent buttons and different fills/radii. `app/cta.css` defines one family, 4px corners, 48px minimum height, 16px Pretendard, brown #604e4d and blue #555e6d. Section and dialog CTA instances opt into that family. Navigation/close/toggle/icon controls preserve their appropriate existing forms.
+- The guestbook bottom padding is now 0px. The ending's own existing top padding remains unchanged.
 
-**Findings and comparison history**
+Final after captures and the combined comparison were opened and visually inspected. No actionable P0/P1/P2 visual findings remain. The test waits for the initial carousel transition before checking its settled center; that was a test timing correction, not a product alignment fix.
 
-1. [P1, fixed] Horizontal swipes beginning in the independently scrolling message body were cancelled by the browser. Added scoped `touch-action: pan-y pinch-zoom` and horizontal overscroll containment to both the carousel and message body. Final Chromium tests pass center/near-edge horizontal swipes, reject short/vertical/diagonal gestures, and preserve browser history.
-2. [P1, fixed] A 20-character name plus a 100-character message left insufficient reading height at 320px. Reduced the long-name font within the existing typography and tightened the card's internal spacing. Final 100-character text is preserved; its reading pane measures 52px tall at 320px and 77px at 390px. The full body can be read by vertical scrolling with a visible hint. Name/date remain separate fixed HTML text.
-3. [P2, fixed] Expanding the address button box directly would change the venue paragraph's line layout. A 32×28px inline slot preserves the existing layout, with a centered actual 44×44px button extending its touch target. Real Chromium clipboard tests pass at both widths.
+## Required fidelity surfaces
 
-Post-fix captures listed above were opened and inspected. The combined source/implementation comparison preserves the original ribbon, flowers, contour, transparency and scale. Text stays inside the central safe rectangle. Original HTML text remains selectable; the artwork has no text baked into it.
+- Typography: existing Designhouse and Pretendard fonts; shared CTA font/line height; no new font assets. Max-length names and full 100-character messages remain readable inside the plate, with native text scrolling for long content.
+- Layout: current plate is centered at both widths and neighbors peek at the sides. Original 1:1 plate ratio and section title alignment are retained. No horizontal document overflow.
+- Colors: existing brown, ivory and guestbook indigo; no new gradients/shadows. All tested section CTAs share the same fill family and exact 4px radius. Map descriptions and icons contrast with the filled background.
+- Asset fidelity: original plate, photos, artwork and audio bytes unchanged. Only CSS presentation and requested CTA classes changed.
+- Copy: old scroll instruction removed, no replacement explanatory sentence in the plate. Names/messages/dates and form text remain unchanged.
 
-**Required fidelity surfaces**
+## Verification
 
-- Fonts/typography: existing font files load in Chromium; section heading and modal follow existing Designhouse/Pretendard rules. The English heading uses existing indigo. Input text remains 16px. Long-name adjustment is scoped to the guestbook.
-- Spacing/layout rhythm: standard section gutters and title hierarchy; one centered square card, original aspect ratio; new content precedes ending. No content appended after ending. The address slot preserves its prior flow geometry.
-- Colors/tokens: warm ivory, brown and existing indigo; no new gradients or card shadows. The asset's own original subtle shading is retained.
-- Image quality: original PNG bytes identical to ZIP; all original assets unchanged. No broken image or horizontal viewport overflow at either width.
-- Copy/content: exact requested heading, description, submit label, field labels and placeholders; public messages rendered as HTML text; exact address success toast. Counts use Unicode code points. No fabricated production messages.
+- 320/390px: first visible scrollbar, thumb movement, 100-character reading, centered plate and next preview, vertical/diagonal/short-swipe rejection, valid horizontal swipes, history preservation.
+- One message: no artificial neighbor and no pagination. Empty/error states and retry preserved.
+- Write/delete, wrong-password rejection, duplicate submit suppression, modal focus trap, scroll restoration and 400px height simulation pass.
+- Clipboard address copying, gallery 1→7→1, map modal, accounts accordion, BGM play/pause and actual loop boundary pass.
+- CTA computed styles checked on the rendered section buttons and map choices. Build/type checks, automated test suite and lint pass.
 
-**Interactions checked**
+## Operational gaps
 
-- Actual touch swipes, short/diagonal/vertical rejection, arrows and position indicator.
-- Write, immediate carousel insertion, duplicate-submit suppression, incorrect-password rejection, deletion and refresh.
-- Modal Tab trap, background inertness, scroll restoration, and 400px viewport height simulation with submit reachable.
-- Empty state, connection failure with retry, no false saved-message success.
-- Actual address clipboard; gallery 1→7→1 wrap/open/close; map modal and three links; account accordion.
-- BGM play/pause and actual audio loop boundary; curtain opens. No browser page errors.
-- Eight unrelated sections' static DOM matches the pre-change build exactly; all original asset bytes remain unchanged.
+Google browser traffic remains unverified live because the enforced cloud policy excludes script.google.com and Googleusercontent. This change does not modify the server URL or storage behavior. Actual iOS Safari edge gestures and physical-device keyboard/IME remain unverified; Chromium and viewport-height simulation are not substitutes.
 
-**Operational gaps**
+## Checklist
 
-- Actual Google browser integration, anonymous permission and current deployed Bridge are unverified because the managed environment blocks script.google.com. This visual QA pass does not certify live integration.
-- User supplied owner self-test logs show real Google Sheet create/read/password rejection/delete/completed all true.
-- Actual iOS Safari edge gestures, physical-device keyboards/IME and external native map application launches are unverified. Chromium height simulation is not a real mobile keyboard test.
-
-**Implementation checklist**
-
-- [x] Original asset placed, byte equality and alpha verified.
-- [x] Source and implementation opened together at normalized sizes.
-- [x] P1/P2 visual and touch findings fixed and recaptured.
-- [x] Mobile app interaction tests, build/type checks, server tests and lint pass.
-- [x] Known external verification gaps explicitly distinguished.
-
-**Follow-up polish**
-
-- Existing floating BGM control can overlap content at particular scroll positions; its original global placement remains unchanged. The guestbook modal hides the control while preserving audio playback, as existing modals do.
+- [x] Source and after screenshots compared together at normalized size.
+- [x] All four requested changes visible in the after state.
+- [x] Existing asset files and external storage integration preserved.
+- [x] Mobile interactions and CTA family verified.
+- [x] External verification gaps stated accurately.
 
 final result: passed
