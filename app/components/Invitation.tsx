@@ -13,6 +13,7 @@ import {
 
 import WeddingMusic, { type WeddingMusicHandle } from "./WeddingMusic";
 import HeroCouple from "./HeroCouple";
+import Guestbook from "./Guestbook";
 import { galleryPhotoFiles, getGalleryPreview, getNextPhotoIndex } from "../lib/gallery.mjs";
 import artwork from "../../figma-assets.json";
 
@@ -376,6 +377,7 @@ export default function Invitation() {
     heroTitle = useRef<HTMLHeadingElement>(null);
   const [gate, setGate] = useState<"closed" | "opening" | "open">("closed");
   const [modal, setModal] = useState<"map" | "gallery" | "rsvp" | null>(null);
+  const [guestbookOpen, setGuestbookOpen] = useState(false);
   const [photoIndex, setPhotoIndex] = useState(0),
     [expanded, setExpanded] = useState<number | null>(null);
   const [toast, setToast] = useState(""),
@@ -409,7 +411,7 @@ export default function Invitation() {
     if (gate === "open") heroTitle.current?.focus({ preventScroll: true });
   }, [gate]);
   useEffect(() => {
-    if (gate === "open" && !modal) return;
+    if (gate === "open" && !modal && !guestbookOpen) return;
     const html = document.documentElement.style.overflow,
       body = document.body.style.overflow;
     document.documentElement.style.overflow = "hidden";
@@ -418,7 +420,7 @@ export default function Invitation() {
       document.documentElement.style.overflow = html;
       document.body.style.overflow = body;
     };
-  }, [gate, modal]);
+  }, [gate, modal, guestbookOpen]);
   useEffect(() => {
     if (!toast) return;
     const timer = window.setTimeout(() => setToast(""), 3200);
@@ -461,7 +463,7 @@ export default function Invitation() {
       <main
         ref={main}
         className="inv-paper"
-        inert={gate !== "open" || modal !== null}
+        inert={gate !== "open" || modal !== null || guestbookOpen}
       >
         <section
           className="inv-section inv-hero"
@@ -573,15 +575,17 @@ export default function Invitation() {
             <Art section={3} name="imgImage1" />
             <p>
               {address},
+              <span className="inv-address-copy-slot">
               <button
                 type="button"
                 className="inv-address-copy"
                 aria-label="주소 복사"
                 title="주소 복사"
-                onClick={() => copy(address, "주소를 복사했어요.")}
+                onClick={() => copy(address, "주소가 복사되었습니다.")}
               >
                 <Art section={6} name="imgIcon" />
               </button>
+              </span>
               <br />
               해피가든
             </p>
@@ -825,6 +829,7 @@ export default function Invitation() {
             </div>
           </div>
         </section>
+        <Guestbook enabled={gate === "open"} onModalChange={setGuestbookOpen} onNotice={setToast} />
         <section
           className="inv-section inv-ending"
           aria-labelledby="ending-title"
@@ -858,7 +863,7 @@ export default function Invitation() {
           </div>
         </section>
       </main>
-      <WeddingMusic ref={music} visible={gate !== "closed" && modal === null} />
+      <WeddingMusic ref={music} visible={gate !== "closed" && modal === null && !guestbookOpen} />
       {gate !== "open" && (
         <Curtain
           opening={gate === "opening"}

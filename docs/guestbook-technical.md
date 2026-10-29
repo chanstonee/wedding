@@ -2,15 +2,15 @@
 
 ## 현재 범위
 
-서버 코드와 브라우저 클라이언트 예제를 준비했습니다. `examples/guestbook-client.mjs`는 기존 청첩장에서 import하지 않으며, 앱·에셋·스타일·Pages 워크플로는 변경하지 않았습니다. 방명록 UI, 프레임 이미지 배치 및 주소 복사 버튼의 추가 수정은 이번 서버 준비에 포함되지 않습니다.
+엔딩 직전에 방명록을 추가했습니다. `Guestbook.tsx` → `app/lib/guestbook-client.mjs` → `examples/guestbook-client.mjs`를 통해 제공받은 웹앱 URL로 연결합니다. 원본 PNG와 별도 HTML 텍스트, 캐러셀, 작성·삭제 모달을 사용합니다. 다른 섹션의 에셋·타이포그래피·스타일은 유지하며 주소 복사 아이콘만 기존 배치를 유지한 채 터치 영역을 44×44px로 넓혔습니다. Pages 워크플로와 npm 의존성은 변경하지 않았습니다.
 
 ### 새 웹앱 URL 수신 후 상태 (2026-10-29, 한국 시간)
 
 - 사용자가 제공한 실제 실행 로그에서 `created`, `read`, `wrongPasswordBlocked`, `deleted`, `completed`가 모두 `true`임을 확인했습니다. 소유자가 실행한 실제 시트 등록·조회·비밀번호 오류 거절·삭제 검증은 통과했습니다. 제가 Google 서버에 직접 접속해 재실행한 결과는 아닙니다.
 - 사용자의 버전 2 배포 완료 화면과 새 `/exec` URL을 받았습니다. `app/lib/guestbook-client.mjs`에 새 URL로 클라이언트를 생성하는 진입점을 준비했습니다. 시트 ID·비밀값은 포함하지 않습니다.
-- 이 모듈은 Invitation에 아직 import하지 않았습니다. 기존 청첩장 화면과 Pages 배포는 유지합니다.
+- Guestbook 컴포넌트에서 새 URL을 사용합니다. 모의 메시지나 localStorage 메시지 저장을 제품 코드에 넣지 않았습니다. 실제 서버 응답이 확인되어야 등록 성공으로 표시합니다.
 - 새 URL도 클라우드 프록시 CONNECT 403으로 차단되었고, 웹 읽기 도구에서도 열리지 않았습니다. 실제 웹앱의 HTTP 상태·익명 접속 권한·Bridge 응답은 미검증입니다. 배포 성공 화면만으로 브라우저 통신 성공을 판정하지 않습니다.
-- 원형 방명록 프레임은 대화에서 시각적으로 확인했지만, 작업 폴더에 원본 PNG 파일이나 다운로드 가능한 파일 참조가 없습니다. 임의로 재생성하거나 기존의 다른 프레임으로 대체하지 않습니다. 최종 화면 구현에는 원본 파일 확보가 필요합니다.
+- 첨부 ZIP의 `plate2.png`를 `public/assets/invitation/guestbook-frame.png`로 추가했습니다. 1254×1254 RGBA이며 원본과 바이트가 일치합니다. 이미지의 형태·색상·알파 채널을 수정하지 않았습니다.
 
 ## 저장 구조
 
@@ -52,7 +52,7 @@ HtmlService 임베딩을 위해 `XFrameOptionsMode.ALLOWALL`을 사용합니다.
 
 ## 클라이언트 사용 규약
 
-`examples/guestbook-client.mjs`는 아직 제품 UI에 연결하지 않은 통신 예제입니다.
+`examples/guestbook-client.mjs`가 통신을 구현하고, `app/lib/guestbook-client.mjs`가 배포 URL을 설정합니다. 제품 UI는 후자의 팩터리를 사용합니다.
 
 ```js
 import { GuestbookClient } from './guestbook-client.mjs';
@@ -91,7 +91,7 @@ client.destroy();
 
 ## 기본 스팸 방지
 
-이름·메시지 길이, 필수값, 제어문자, 요청 크기, UUID, 삭제 확인값을 서버에서 검사합니다. 숨겨진 `website` 필드는 빈 값이어야 하며, 세션 발급 후 2.5초 이내 등록은 거절합니다. 프런트엔드는 실제 honeypot 필드와 중복 제출 방지를 구현해야 합니다.
+이름·메시지 길이, 필수값, 제어문자, 요청 크기, UUID, 삭제 확인값을 서버에서 검사합니다. 숨겨진 `website` 필드는 빈 값이어야 하며, 세션 발급 후 2.5초 이내 등록은 거절합니다. 프런트엔드에는 숨겨진 honeypot 필드, 입력값 검증, 동기 제출 잠금과 제출 중 버튼 비활성화를 적용했습니다.
 
 요청 제한은 Script Properties와 ScriptLock으로 관리하며 단순 캐시 제거로 초기화되지 않습니다. 창은 첫 요청에서 시작하고 지정 시간이 지나면 리셋됩니다. `bootstrap` 때 만료 카운터를 주기적으로 정리합니다.
 
@@ -121,7 +121,11 @@ client.destroy();
 | 실제 Google 시트 등록·조회·삭제 | **사용자 실행 로그로 통과 확인** | 소유자 서버 자체 점검 5개 항목 true, 직접 재실행은 미검증 |
 | 제공된 실제 웹앱 응답·익명 접속 | **미검증** | 현재 실행 환경의 script.google.com 연결 정책으로 접근 불가 |
 | 실제 Pages ↔ Google 브라우저 통신 | **미검증** | 실제 웹앱으로 최종 연결 필요 |
-| 신규 방명록 UI·키보드·프레임 정렬 | **미검증 / 미구현** | 서버 준비 단계로 범위 제한 |
+| 신규 UI·프레임·스와이프·작성·삭제·주소 복사 | **성공** | 320px/390px Chromium, 서버 통신은 로컬 GAS 어댑터 |
+| 긴 메시지·20자 이름 | **성공** | 100자 보존, 프레임 안의 스크롤 영역에서 모두 읽기 가능 |
+| 모바일 키보드 | **높이 축소 모사 통과 / 실제 기기 미검증** | 400px 뷰포트에서 입력·등록 버튼 접근 |
+| iOS Safari 시스템 가장자리 제스처 | **미검증** | Chromium 결과로 대체 판정하지 않음 |
+| 빈 상태·연결 실패·중복 제출·Tab 순환 | **성공** | 오류 시 임의 메시지 또는 등록 성공을 생성하지 않음 |
 
 환경의 프록시 CONNECT가 403으로 연결을 거절한 것이며, Google 웹앱 자체에서 HTTP 403을 받았다는 뜻이 아닙니다. Google 데이터 변경 요청은 전송하지 않았습니다. 모사 브라우저 테스트 스크린샷에는 실제 Google 저장 검증이 아니라는 안내를 표시했습니다.
 
@@ -136,3 +140,25 @@ client.destroy();
 - [ContentService 리다이렉트와 JSONP 보안 주의](https://developers.google.com/apps-script/guides/content)
 - [Apps Script 무료 계정 할당량 및 변경 가능성](https://developers.google.com/apps-script/guides/services/quotas)
 - [Utilities UUID·HMAC API](https://developers.google.com/apps-script/reference/utilities/utilities)
+
+## 모바일 UI 검증 재현
+
+Pages 빌드 파일을 `/wedding/` 아래에서 제공하는 로컬 서버를 실행하고, Playwright와 Chromium이 설치된 환경에서 실행합니다. npm 의존성은 추가하지 않았습니다.
+
+```sh
+PLAYWRIGHT_MODULE=/설치경로/playwright/index.mjs GUESTBOOK_TEST_ORIGIN=http://127.0.0.1:4174 CHROMIUM_EXECUTABLE=/usr/bin/chromium node tests/browser/guestbook.mjs
+```
+
+이 스크립트는 Google 호스트 요청만 가로채 실제 준비한 Bridge와 서버 코드를 로컬 어댑터로 실행합니다. 원격 Google 데이터에 쓰지 않습니다. 제품 코드에는 이 어댑터나 테스트 데이터가 포함되지 않습니다. 일반 브라우저에서 로컬 URL로 실제 Google 연결을 하려면 해당 출처가 GAS의 `ALLOWED_ORIGINS`에 있어야 합니다. 배포 기본 허용 출처는 GitHub Pages이며 임의 출처를 자동 허용하지 않습니다.
+
+100자 메시지를 320px의 원형 장식 안에 전부 펼치면 가독성 또는 장식 보존 조건을 충족할 수 없어, 긴 본문만 내부 세로 스크롤로 읽고 안내 문구를 표시합니다. 작성자명·날짜는 고정되며 본문 데이터는 자르거나 생략하지 않습니다.
+
+## 변경 파일
+
+- `Guestbook.tsx`, `guestbook.css`: 엔딩 이전 방명록, 원형 카드/내부 읽기 영역, 터치 캐러셀, 작성·삭제 팝업, 포커스/스크롤 보존.
+- `Invitation.tsx`, `page.tsx`: 섹션과 모달 상태 연결, 별도 CSS 로드, 주소 성공 토스트.
+- `invitation.css`: 주소 아이콘의 기존 배치를 보존한 44×44px 터치 영역.
+- `public/assets/invitation/guestbook-frame.png`: ZIP의 원본 이미지 그대로.
+- `tests/browser/guestbook.mjs`: 모바일 UI와 기존 기능 회귀 검증.
+- `tests/rendered-html.test.mjs`: 방명록이 엔딩 이전에 있는지 검사. BGM 검사에서 방명록 설명에도 쓰이는 일반 문구 대신 실제 이전 음원 파일명/가수명을 검사.
+- UI 테스트 데이터와 Google 모사는 tests 아래에만 있으며 제품에 포함하지 않습니다.

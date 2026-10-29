@@ -19,7 +19,9 @@ test("exports the Figma invitation through the ending for GitHub Pages", async (
     "초대장 열기",
   ])
     assert.ok(html.includes(title), title);
-  assert.equal((html.match(/<section class="inv-section /g) ?? []).length, 9);
+  assert.equal((html.match(/<section class="inv-section /g) ?? []).length, 10);
+  assert.ok(html.indexOf('class="inv-section inv-guestbook"') < html.indexOf('class="inv-section inv-ending"'));
+  assert.match(html, /GUEST BOOK/);
   assert.match(html, /class="inv-section inv-ending"/);
   assert.doesNotMatch(html, /드레스코드|꿈을 위한 안내|class="guestbook/);
   assert.ok(html.includes(`${basePath}/_next/`));
@@ -58,7 +60,8 @@ test("ships the MP3 player before the curtain opens with the correct Pages path"
   assert.match(audio, /\bloop(?:="")?/);
   assert.match(audio, /preload="auto"/);
   assert.doesNotMatch(html, /youtube\.com\/embed|윤미래/);
-  assert.doesNotMatch(html, /two-people\.mp3|성시경|두 사람/);
+  // "두 사람" is also the requested guestbook introduction, not a unique song identifier.
+  assert.doesNotMatch(html, /two-people\.mp3|성시경/);
   await assert.rejects(access(new URL("assets/invitation/two-people.mp3", output)), { code: "ENOENT" });
   const source = await readFile(new URL("../public/assets/invitation/popcorn.mp3", import.meta.url));
   const exported = await readFile(new URL("assets/invitation/popcorn.mp3", output));

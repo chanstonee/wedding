@@ -1,6 +1,6 @@
 # 무료 방명록 서버 설정 안내
 
-이 안내는 Google Sheets + Google Apps Script 서버를 준비하는 단계입니다. 기존 청첩장 화면과 GitHub Pages 배포는 변경하지 않았습니다. 스프레드시트는 비공개로 유지하고, 웹앱만 익명으로 접속할 수 있게 배포합니다. 하객의 Google 로그인은 필요하지 않습니다.
+이 안내는 Google Sheets + Google Apps Script 방명록 서버의 설정 절차입니다. 청첩장의 방명록 섹션은 이 서버를 사용합니다. 스프레드시트는 비공개로 유지하고, 웹앱만 익명으로 접속할 수 있게 배포합니다. 하객의 Google 로그인은 필요하지 않습니다.
 
 ## 1. 파일 준비
 
@@ -46,6 +46,17 @@
 ## `setTimeout is not defined`가 표시되는 경우
 
 초기 제공본 bcrypt의 타이머 선택 코드에서 발생한 호환성 오류입니다. 최신 묶음의 `Bcrypt.gs` 전체를 기존 파일에 다시 붙여넣어 저장하세요. 스크립트 속성·시트·다른 파일을 초기화할 필요는 없습니다. 그다음 아래 `setupGuestbook_`와 `testGuestbookConnection_`을 실행합니다. 이 수정은 타이머 없는 환경의 로딩만 보완하며 해시 알고리즘이나 기존 데이터는 변경하지 않습니다.
+
+## 편집기 함수 메뉴에 밑줄 함수가 보이지 않는 경우
+
+`Code.gs` 맨 아래에 다음 두 함수를 임시로 추가해 저장하면 메뉴에서 `runSetupGuestbook`, `runTestGuestbookConnection`을 선택할 수 있습니다. 아래 4~5단계의 원래 함수 대신 각각 실행합니다.
+
+```js
+function runSetupGuestbook() { return setupGuestbook_(); }
+function runTestGuestbookConnection() { return testGuestbookConnection_(); }
+```
+
+**실제 점검을 마친 뒤 웹앱 새 버전 배포 전에는 두 임시 함수를 삭제하세요.** 원래 밑줄로 끝나는 함수는 유지합니다. 임시 공개 함수가 배포된 브리지에서 호출될 수 없도록 정리하는 단계입니다. 이미 실행용 함수를 `runSetupGuestbook_`, `runTestGuestbookConnection_`으로 바꿨다면 비공개 이름이므로 유지해도 됩니다.
 
 ## 4. 초기화와 Google 권한 승인
 

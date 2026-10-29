@@ -135,6 +135,7 @@ export class GuestbookClient {
       return this.request(action, fields);
     }
   }
+  /** @param {string | null} [cursor] */
   async list(cursor = null) { return page(await this.authorized("list", { cursor })); }
   async create({ name, message, password, website = "" }, requestId) {
     if (!requestId) throw new GuestbookError("INVALID", "중복 등록 방지를 위한 요청 ID가 필요합니다.");
