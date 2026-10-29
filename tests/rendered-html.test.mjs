@@ -54,12 +54,14 @@ test("ships the MP3 player before the curtain opens with the correct Pages path"
   const html = await readFile(new URL("index.html", output), "utf8");
   const audio = html.match(/<audio\b[^>]*>/)?.[0];
   assert.ok(audio, "audio must already be mounted for the first curtain tap");
-  assert.ok(audio.includes(`${basePath}/assets/invitation/two-people.mp3`));
+  assert.ok(audio.includes(`${basePath}/assets/invitation/popcorn.mp3`));
   assert.match(audio, /\bloop(?:="")?/);
   assert.match(audio, /preload="auto"/);
   assert.doesNotMatch(html, /youtube\.com\/embed|윤미래/);
-  const source = await readFile(new URL("../public/assets/invitation/two-people.mp3", import.meta.url));
-  const exported = await readFile(new URL("assets/invitation/two-people.mp3", output));
+  assert.doesNotMatch(html, /two-people\.mp3|성시경|두 사람/);
+  await assert.rejects(access(new URL("assets/invitation/two-people.mp3", output)), { code: "ENOENT" });
+  const source = await readFile(new URL("../public/assets/invitation/popcorn.mp3", import.meta.url));
+  const exported = await readFile(new URL("assets/invitation/popcorn.mp3", output));
   assert.ok(source.byteLength > 0);
   assert.deepEqual(exported, source);
 });

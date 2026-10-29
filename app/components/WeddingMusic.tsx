@@ -44,7 +44,7 @@ const WeddingMusic = forwardRef<WeddingMusicHandle, { visible: boolean }>(
       <>
         <audio
           ref={audio}
-          src={`${publicBasePath}/assets/invitation/two-people.mp3`}
+          src={`${publicBasePath}/assets/invitation/popcorn.mp3`}
           preload="auto"
           loop
           onPlay={() => setPlaying(true)}
@@ -61,7 +61,7 @@ const WeddingMusic = forwardRef<WeddingMusicHandle, { visible: boolean }>(
             onClick={toggle}
             aria-pressed={playing}
             aria-label={playing ? "배경음악 끄기" : "배경음악 켜기"}
-            title="성시경 — 두 사람"
+            title="디오 — Popcorn"
           >
             <span aria-hidden="true">{playing ? "♫" : "♪"}</span>
             BGM {playing ? "ON" : "OFF"}
