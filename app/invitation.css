@@ -373,7 +373,8 @@ body:has(.wedding-invitation)::before {
 }
 .inv-gallery {
   margin-top: -46px;
-  background: var(--inv-paper);
+  /* Let the frame blend with the paper and overlapping timetable below it. */
+  isolation: auto;
   /* Place the title below the supplied frame's central ribbon. */
   padding-top: calc(176 * var(--inv-unit));
   padding-bottom: 84px;
@@ -382,7 +383,7 @@ body:has(.wedding-invitation)::before {
 .inv-gallery-border {
   position: absolute;
   inset: 0 0 auto;
-  z-index: -1;
+  z-index: 0;
   width: 100%;
   pointer-events: none;
   /* The supplied JPEG has a white background; blend it into the ivory paper. */

@@ -69,3 +69,25 @@ Screenshots `/workspace/wedding-gallery-overlap-verification/boundary-320.png`
 and `boundary-390.png` plus `results.json` confirm the overlap, no horizontal
 overflow, and working +2 MORE, popup open/close and bidirectional wrap. Pages
 build, TypeScript and existing automated tests pass; lint has zero warnings.
+
+## Transparent gallery background (latest)
+
+The owner requested the selected gallery section's background to be transparent.
+Remove its opaque paper background and use `isolation: auto` so the frame's
+existing multiply blend can reach the underlying paper and timetable. Set only
+the decorative frame to z-index 0, keeping the content at its existing z-index 1.
+This supersedes the opaque timetable masking described in the prior adjustment:
+the -46px overlap is retained and timetable artwork now shows through the frame
+background. The supplied frame file, all photographs, every section's HTML,
+section geometry and gesture handlers remain unchanged.
+
+At both 320px and 390px the computed gallery background is rgba(0,0,0,0), the
+underlying timetable is visible in the overlap, the paper stays ivory without a
+white JPEG rectangle, and the frame keeps its natural aspect ratio. Photo crops
+are visually unchanged; comparing opaque and transparent browser renderings has
+mean per-channel difference below 0.01/255 from compositing. The 3-column preview,
++2 MORE opening 6/7, next/previous wrap and close pass without page exceptions or
+horizontal overflow. Build/type checking, existing tests and zero-warning lint
+pass. Latest screenshots and results are under
+`/workspace/wedding-gallery-transparent-verification/` (boundary-320.png,
+boundary-390.png, gallery captures, results.json). No remaining P0/P1/P2 findings.
