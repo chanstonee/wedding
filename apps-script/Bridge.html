@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="ko">
+<head><meta charset="utf-8"><meta name="referrer" content="strict-origin"><title>방명록 연결</title></head>
+<body>
+<script>
+  // The server validates both fields and escapes the JSON before template output.
+  const bridge = <?!= bootstrapJson ?>;
+  const prefix = 'wedding-guestbook';
+  let busy = false;
+  function send(type, fields) {
+    if (window.top !== window) window.top.postMessage(Object.assign({ type: prefix + ':' + type, nonce: bridge.nonce, protocol: bridge.protocol }, fields), bridge.origin);
+  }
+  window.addEventListener('message', function (event) {
+    const request = event.data;
+    if (event.source !== window.top || event.origin !== bridge.origin || !request || request.type !== prefix + ':request' || request.nonce !== bridge.nonce || request.protocol !== bridge.protocol || !/^[a-f0-9-]{36}$/.test(request.id)) return;
+    if (busy) { send('response', { id: request.id, result: { ok: false, code: 'BUSY', message: '잠시 후 다시 시도해 주세요.', retryAfter: 1 } }); return; }
+    busy = true;
+    google.script.run
+      .withSuccessHandler(function (result) { busy = false; send('response', { id: request.id, result: result }); })
+      .withFailureHandler(function () { busy = false; send('response', { id: request.id, result: { ok: false, code: 'UNAVAILABLE', message: '방명록에 연결하지 못했어요. 잠시 후 다시 시도해 주세요.' } }); })
+      .guestbookRpc(request.payload);
+  });
+  send('ready', {});
+</script>
+</body>
+</html>
