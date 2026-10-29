@@ -66,7 +66,8 @@ export function createGasHarness(options = {}) {
     return { content, mode: "DEFAULT", setTitle() { return this; }, setXFrameOptionsMode(mode) { this.mode = mode; return this; }, getContent() { return this.content; } };
   }
   const context = vm.createContext({
-    Date: Clock, setTimeout, clearTimeout,
+    // Apps Script has no browser/Node timer APIs. Do not mask vendor load errors.
+    Date: Clock,
     console: { log: (value) => state.logs.push(String(value)) },
     SpreadsheetApp: { getActiveSpreadsheet: () => book, openById: (id) => { if (id !== book.getId()) throw new Error("Unknown test Sheet"); return book; } },
     PropertiesService: { getScriptProperties: () => props },

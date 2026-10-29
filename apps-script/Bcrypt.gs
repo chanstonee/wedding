@@ -28,7 +28,8 @@ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
-// GENERATED FILE. DO NOT EDIT.
+// Vendored UMD build. Local GAS compatibility patch: guard the timer fallback.
+// Apps Script supports only this backend's hashSync/compareSync usage.
 (function (global, factory) {
   function preferDefault(exports) {
     return exports.default || exports;
@@ -422,7 +423,11 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         : typeof scheduler === "object" &&
             typeof scheduler.postTask === "function"
           ? scheduler.postTask.bind(scheduler)
-          : setTimeout;
+          : typeof setTimeout === "function"
+            ? setTimeout
+            : function () {
+                throw Error("Apps Script에서는 bcrypt의 hashSync/compareSync를 사용하세요.");
+              };
 
     /** Calculates the byte length of a string encoded as UTF8. */
     function utf8Length(string) {

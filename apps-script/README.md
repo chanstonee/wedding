@@ -14,4 +14,4 @@
 - npm tarball SHA-1: `4b93d6a398c48bfc9f32ee65d301174a8a8ea56f`
 - npm integrity: `sha512-GlF5wPWnSa/X5LKM1o0wz0suXIINz1iHRLvTS+sLyi7XPbe5ycmYI3DlZqVGZZtDgl4DmasFg7gOB3JYbphV5g==`
 
-`Bcrypt.gs`는 UMD 파일 앞에 원본 BSD 라이선스 전문 주석을 추가한 파일입니다. 라이브러리 실행 코드는 수정하지 않았습니다. Apps Script에서 npm이나 외부 CDN 없이 동작하도록 포함했습니다. 배포·재사용 시 라이선스와 저작권 표시를 유지하세요.
+`Bcrypt.gs`는 UMD 파일 앞에 원본 BSD 라이선스 전문 주석을 추가하고, Apps Script에 없는 타이머를 초기화 단계에서 참조하지 않도록 `nextTick`의 타이머 선택 부분을 수정한 파일입니다. 해시 계산 알고리즘·비용·salt 처리는 변경하지 않았습니다. 이 서버는 `hashSync`와 `compareSync`만 사용합니다. 타이머가 없는 환경에서 비동기 bcrypt API를 호출하면 안내 오류로 중단합니다. 전역 타이머를 흉내 내거나 비동기 API를 임의로 즉시 실행하지 않습니다. Apps Script에서 npm이나 외부 CDN 없이 동작하도록 포함했습니다. 배포·재사용 시 라이선스와 저작권 표시를 유지하세요.

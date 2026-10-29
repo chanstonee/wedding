@@ -1,6 +1,6 @@
 /* Private, owner-executed Google Apps Script backend. No secrets go to Pages.
  * Only doGet and guestbookRpc are public; helpers end in '_' to block RPC access.
- * Bcrypt.gs is unmodified bcryptjs 3.0.3, BSD-3-Clause (LICENSE.bcryptjs).
+ * Bcrypt.gs is bcryptjs 3.0.3 with a GAS timer guard, BSD-3-Clause (LICENSE.bcryptjs).
  */
 var GB_ = Object.freeze({
   protocol: 1, sheet: 'Guestbook', cost: 12, sessionMs: 3600000,

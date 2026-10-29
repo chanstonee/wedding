@@ -4,6 +4,17 @@ import { readFile } from "node:fs/promises";
 import { createHmac, randomUUID } from "node:crypto";
 import { createGasHarness, createEntry } from "./helpers/guestbook-gas-harness.mjs";
 
+test("bcrypt loads without Apps Script timer APIs and does not fake async scheduling", () => {
+  const h = createGasHarness();
+  for (const name of ["setTimeout", "clearTimeout", "setImmediate", "scheduler"])
+    assert.equal(typeof h.context[name], "undefined");
+  assert.equal(typeof h.context.bcrypt.hashSync, "function");
+  assert.equal(typeof h.context.bcrypt.compareSync, "function");
+  let callbackCalled = false;
+  assert.throws(() => h.context.bcrypt.genSalt(12, () => { callbackCalled = true; }), /hashSync\/compareSync/);
+  assert.equal(callbackCalled, false);
+});
+
 test("setup preserves secrets and existing rows and refuses incompatible headers", () => {
   const h = createGasHarness();
   const secret = h.props.getProperty("PRIVATE_PEPPER");
