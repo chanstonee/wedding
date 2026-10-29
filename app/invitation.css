@@ -874,6 +874,8 @@ body:has(.wedding-invitation)::before {
   border-radius: 50%;
 }
 .inv-lightbox-image {
+  /* Handle horizontal image swipes; leave vertical panning and zoom to the browser. */
+  touch-action: pan-y pinch-zoom;
   display: flex;
   justify-content: center;
   align-items: center;

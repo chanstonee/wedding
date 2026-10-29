@@ -378,7 +378,12 @@ export default function Invitation() {
   const [toast, setToast] = useState(""),
     [attendance, setAttendance] = useState("yes"),
     [guestName, setGuestName] = useState("");
-  const touchStart = useRef<number | null>(null);
+  const swipeStart = useRef<{
+    pointerId: number;
+    x: number;
+    y: number;
+    maxY: number;
+  } | null>(null);
   const returnFocus = useRef<HTMLElement | null>(null);
   const openModal = (type: "map" | "gallery" | "rsvp") => {
     returnFocus.current = document.activeElement as HTMLElement | null;
@@ -882,16 +887,39 @@ export default function Invitation() {
         >
           <div
             className="inv-lightbox-image"
-            onTouchStart={(event) => {
-              touchStart.current = event.touches[0].clientX;
-            }}
-            onTouchEnd={(event) => {
-              if (touchStart.current !== null) {
-                const distance =
-                  touchStart.current - event.changedTouches[0].clientX;
-                if (Math.abs(distance) > 50) changePhoto(distance > 0 ? 1 : -1);
-                touchStart.current = null;
+            onPointerDown={(event) => {
+              if (event.pointerType !== "touch" || !event.isPrimary) {
+                swipeStart.current = null;
+                return;
               }
+              swipeStart.current = {
+                pointerId: event.pointerId,
+                x: event.clientX,
+                y: event.clientY,
+                maxY: 0,
+              };
+              event.currentTarget.setPointerCapture(event.pointerId);
+            }}
+            onPointerMove={(event) => {
+              const start = swipeStart.current;
+              if (!start || start.pointerId !== event.pointerId) return;
+              start.maxY = Math.max(start.maxY, Math.abs(event.clientY - start.y));
+            }}
+            onPointerUp={(event) => {
+              const start = swipeStart.current;
+              if (!start || start.pointerId !== event.pointerId) return;
+              swipeStart.current = null;
+              const dx = event.clientX - start.x;
+              const dy = Math.max(start.maxY, Math.abs(event.clientY - start.y));
+              // Ignore taps, vertical/diagonal paths, and vertical detours.
+              if (Math.abs(dx) > 50 && Math.abs(dx) > dy * 1.5)
+                changePhoto(dx < 0 ? 1 : -1);
+            }}
+            onPointerCancel={() => {
+              swipeStart.current = null;
+            }}
+            onLostPointerCapture={() => {
+              swipeStart.current = null;
             }}
           >
             {/* eslint-disable-next-line @next/next/no-img-element -- The lightbox uses native image dimensions with viewport-constrained CSS. */}
