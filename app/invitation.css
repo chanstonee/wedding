@@ -372,6 +372,7 @@ body:has(.wedding-invitation)::before {
   line-height: 28px;
 }
 .inv-gallery {
+  margin-top: -46px;
   background: var(--inv-paper);
   /* Place the title below the supplied frame's central ribbon. */
   padding-top: calc(176 * var(--inv-unit));

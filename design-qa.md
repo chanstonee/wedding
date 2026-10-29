@@ -55,3 +55,17 @@ exported markup, and no previously committed photos/fonts/audio were modified.
 Real iOS Safari system-edge gestures and direct production-origin visual checks
 remain unverified in this restricted environment. GitHub Actions confirms Pages
 publication; the local browser uses the actual Pages build output.
+
+## Timeline/gallery overlap adjustment
+
+The owner requested the gallery to cover the end of the timetable as before.
+Only `.inv-gallery { margin-top: -46px; }` changes the rendered layout. At both
+320px and 390px, the gallery starts exactly 46px above the timetable's bottom and
+its existing ivory background masks the lower artwork. The last 19:30 schedule
+text remains visible. All nine sections' exported HTML is unchanged, as are
+frame ratio, gallery dimensions, image assets and interaction handlers. The next
+section naturally moves up with the gallery's position in document flow.
+Screenshots `/workspace/wedding-gallery-overlap-verification/boundary-320.png`
+and `boundary-390.png` plus `results.json` confirm the overlap, no horizontal
+overflow, and working +2 MORE, popup open/close and bidirectional wrap. Pages
+build, TypeScript and existing automated tests pass; lint has zero warnings.
