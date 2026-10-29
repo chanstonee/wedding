@@ -12,6 +12,7 @@ import {
 } from "react";
 
 import WeddingMusic, { type WeddingMusicHandle } from "./WeddingMusic";
+import HeroCouple from "./HeroCouple";
 import { galleryPhotoFiles, getGalleryPreview, getNextPhotoIndex } from "../lib/gallery.mjs";
 import artwork from "../../figma-assets.json";
 
@@ -478,7 +479,7 @@ export default function Invitation() {
             <Art section={0} name="imgGroup2" alt="사랑을 담아!" />
           </div>
           <div className="inv-couple">
-            <Art section={0} alt="손을 맞잡고 춤추는 신랑과 신부" />
+            <HeroCouple />
           </div>
           <h1 ref={heroTitle} tabIndex={-1}>
             재훈 & 다연

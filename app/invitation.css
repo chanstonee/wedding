@@ -226,9 +226,51 @@ body:has(.wedding-invitation)::before {
   transform-origin: 50% 100%;
 }
 .is-revealed .inv-couple {
-  animation:
-    inv-couple-enter 1.4s 0.1s both,
-    inv-couple-sway 3.8s 1.6s ease-in-out infinite alternate;
+  animation: inv-couple-enter 1.4s 0.1s both;
+}
+.inv-couple-art {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+.inv-couple-sway,
+.inv-couple-body {
+  /* Shared SVG-space hand contact: independent bodies keep the same anchor. */
+  transform-box: view-box;
+  transform-origin: 181px 24px;
+}
+.inv-couple-dress {
+  transform-box: view-box;
+  transform-origin: 216px 146px;
+}
+.inv-couple-hair {
+  transform-box: view-box;
+  transform-origin: 223px 64px;
+}
+.is-revealed .inv-couple-float {
+  animation: inv-couple-float 4.8s 1.5s ease-in-out infinite;
+}
+.is-revealed .inv-couple-sway {
+  animation: inv-couple-sway 4.8s 1.5s ease-in-out infinite;
+}
+.is-revealed .inv-couple-male {
+  animation: inv-couple-male 4.8s 1.5s ease-in-out infinite;
+}
+.is-revealed .inv-couple-female {
+  animation: inv-couple-female 4.8s 1.5s ease-in-out infinite;
+}
+.is-revealed .inv-couple-dress {
+  animation: inv-couple-dress 4.8s 1.74s ease-in-out infinite;
+}
+.is-revealed .inv-couple-hair {
+  animation: inv-couple-hair 4.8s 1.82s ease-in-out infinite;
+}
+.is-revealed .inv-couple-heart {
+  animation: inv-couple-heart 5.2s 1.8s ease-in-out infinite;
+}
+.is-revealed .inv-couple-star {
+  animation: inv-couple-star 5.6s 1.8s ease-in-out infinite;
 }
 .inv-hero h1 {
   z-index: 1;
@@ -980,12 +1022,41 @@ body:has(.wedding-invitation)::before {
   }
 }
 @keyframes inv-couple-sway {
-  from {
-    transform: rotate(-1.6deg);
-  }
-  to {
-    transform: rotate(1.6deg);
-  }
+  0%, 50%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-1.1deg); }
+  75% { transform: rotate(1.1deg); }
+}
+@keyframes inv-couple-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+@keyframes inv-couple-male {
+  0%, 50%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(0.22deg); }
+  75% { transform: rotate(-0.22deg); }
+}
+@keyframes inv-couple-female {
+  0%, 50%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-0.28deg); }
+  75% { transform: rotate(0.28deg); }
+}
+@keyframes inv-couple-dress {
+  0%, 50%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(0.18deg); }
+  75% { transform: rotate(-0.18deg); }
+}
+@keyframes inv-couple-hair {
+  0%, 50%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(0.32deg); }
+  75% { transform: rotate(-0.32deg); }
+}
+@keyframes inv-couple-heart {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-1.3px); }
+}
+@keyframes inv-couple-star {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-0.8px); }
 }
 @keyframes inv-line-pulse {
   0%,

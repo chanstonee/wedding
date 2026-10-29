@@ -12,6 +12,11 @@ preserved byte-for-byte with its 389 × 620 viewBox and transparent background.
 The gallery now uses that SVG directly; the JPEG and the original cloud frame
 and separate ribbon exports remain archived here.
 
+section-0-img.svg remains the unmodified source of the hero couple illustration.
+app/lib/hero-couple-paths.json preserves its 314 paths and their original paint
+order for accessible inline SVG/CSS motion. See docs/hero-motion.md for the
+grouping, original-geometry checks and limits of independent layer animation.
+
 Fonts:
 - Designhouse OTF Bold — Designhouse, original unmodified OTF.
   Font information: https://noonnu.cc/font_page/89

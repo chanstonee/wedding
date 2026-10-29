@@ -56,3 +56,40 @@ captures, `results.json` and `gallery-vector-preview.mjs`.
 Real iOS Safari system-edge gestures and direct production-origin visual checks
 remain unverified in this restricted environment. Local browser verification
 uses the actual Pages output. Deployment is checked through GitHub Actions.
+
+## Hero couple motion: pending visual review
+
+The preceding gallery/vector/cocktail revision was deployed successfully as
+fb2e57e325297f4432d28029c9e5754d2ea0e4c8 (Pages run 40818682802).
+The new hero motion is verified locally and has not been pushed or deployed.
+
+Source inspection finds two SVG groups and 314 paths, without semantic body
+layers or embedded raster images. The original SVG remains unchanged. Its exact
+path attributes and paint order are preserved in hero-couple-paths.json and
+rendered as accessible inline SVG by HeroCouple.tsx. Original group opacity and
+aspect-ratio behavior are retained. Static original/grouped browser captures
+have zero pixel difference at the same viewport and rendering scale.
+
+Motion: 4.8s ease-in-out sway ±1.1° plus upward float by 4 SVG units. Male and
+Female rotate independently ±0.22° / ±0.28° about the shared original hand point
+(181,24). Separately identifiable dress interior folds and back-hair paths follow
+with 0.24s / 0.32s additional delay and ±0.18° / ±0.32° amplitude. Their continuous
+body/dress/front-hair silhouettes are not split or redrawn. Heart and star float
+by at most 1.3 / 0.8 units with slower periods. See docs/hero-motion.md for the
+exact structure, wrapper, CSS and original-layer limits.
+
+At 320px and 390px, 41 sampled phases per width pass: coincident hand anchor,
+contact-region displacement under 0.056 CSS px, float range about 3.28/4px,
+bounded rotations, seamless core repeat, stable layout, no clipping, horizontal
+overflow or collisions with the title. Real-time CSS playback is verified,
+including the exported standalone animated SVG. Reduced motion disables all SVG
+animations and restores the static drawing. Gallery MORE/wrap/close and BGM
+continuity pass; no page exceptions or local HTTP errors occur. Original and
+extreme phase captures were visually reviewed. No remaining P0/P1/P2 findings
+in the new scope. Actual iOS Safari and physical-device frame rate are unverified.
+
+Pages build with type checking, zero-warning lint and all ten automated tests
+pass. Evidence is in `/workspace/wedding-hero-motion-verification/`:
+hero-couple-preview.svg (actual SVG/CSS animation), hero-motion.css,
+motion-phases.png, original/static-grouped comparisons, results.json,
+static-fidelity.json, reduced-motion.json, standalone-preview.json and traces.

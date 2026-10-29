@@ -23,7 +23,7 @@ test("exports the Figma invitation through the ending for GitHub Pages", async (
   assert.match(html, /class="inv-section inv-ending"/);
   assert.doesNotMatch(html, /드레스코드|꿈을 위한 안내|class="guestbook/);
   assert.ok(html.includes(`${basePath}/_next/`));
-  assert.ok(html.includes(`${basePath}/assets/invitation/section-0-img.svg`));
+  assert.match(html, /<svg[^>]*class="inv-couple-art"/);
   assert.match(html, /계좌번호는 디자인 확인용 예시입니다/);
   assert.match(html, /aria-expanded="false"/);
   assert.doesNotMatch(html, /관리자 이메일|인증 메일 보내기/);
