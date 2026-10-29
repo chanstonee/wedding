@@ -1,7 +1,7 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState, type FormEvent, type ReactNode } from "react";
-import { createPortal } from "react-dom";
+import { useCallback, useEffect, useRef, useState, type FormEvent } from "react";
+import GuestbookModal from "./GuestbookModal";
 import { createGuestbookClient, GuestbookError } from "../lib/guestbook-client.mjs";
 
 const base = process.env.NEXT_PUBLIC_SITE_BASE_PATH ?? "";
@@ -14,68 +14,6 @@ const date = (value: string) => new Intl.DateTimeFormat("ko-KR", {
 }).format(new Date(value));
 function errorMessage(error: unknown) {
   return error instanceof GuestbookError ? error.message : "방명록에 연결하지 못했어요. 잠시 후 다시 시도해 주세요.";
-}
-
-function GuestbookModal({ title, busy, close, children }: {
-  title: string; busy: boolean; close: () => void; children: ReactNode;
-}) {
-  const panel = useRef<HTMLDivElement>(null);
-  const closeButton = useRef<HTMLButtonElement>(null);
-  const busyRef = useRef(busy);
-  const [viewport, setViewport] = useState<{ height: number; top: number } | null>(null);
-  useEffect(() => { busyRef.current = busy; }, [busy]);
-  useEffect(() => {
-    const previous = document.activeElement as HTMLElement | null;
-    const scrollY = window.scrollY;
-    closeButton.current?.focus({ preventScroll: true });
-    const resize = () => {
-      const view = window.visualViewport;
-      if (view) setViewport({ height: view.height, top: view.offsetTop });
-    };
-    resize();
-    window.visualViewport?.addEventListener("resize", resize);
-    window.visualViewport?.addEventListener("scroll", resize);
-    const keydown = (event: KeyboardEvent) => {
-      if (event.key === "Escape" && !busyRef.current) { event.preventDefault(); close(); }
-      if (event.key !== "Tab" || !panel.current) return;
-      const elements = Array.from(panel.current.querySelectorAll<HTMLElement>(
-        'button:not(:disabled), input:not(:disabled):not([tabindex="-1"]), textarea:not(:disabled), a[href]',
-      )).filter((element) => element.getClientRects().length > 0);
-      const first = elements[0], last = elements[elements.length - 1];
-      if (event.shiftKey && (document.activeElement === first || !panel.current.contains(document.activeElement))) {
-        event.preventDefault(); last?.focus();
-      } else if (!event.shiftKey && (document.activeElement === last || !panel.current.contains(document.activeElement))) {
-        event.preventDefault(); first?.focus();
-      }
-    };
-    document.addEventListener("keydown", keydown);
-    return () => {
-      document.removeEventListener("keydown", keydown);
-      window.visualViewport?.removeEventListener("resize", resize);
-      window.visualViewport?.removeEventListener("scroll", resize);
-      requestAnimationFrame(() => {
-        window.scrollTo(0, scrollY);
-        previous?.focus({ preventScroll: true });
-      });
-    };
-  }, [close]);
-  const root = document.querySelector(".wedding-invitation");
-  if (!root) return null;
-  return createPortal(
-    <div className="gb-overlay" style={viewport ? { height: viewport.height, top: viewport.top } : undefined}
-      onClick={(event) => { if (event.target === event.currentTarget && !busy) close(); }}>
-      <div className="gb-dialog" role="dialog" aria-modal="true" aria-labelledby="gb-dialog-title" ref={panel}>
-        <header className="gb-dialog-header">
-          <h2 id="gb-dialog-title">{title}</h2>
-          <button ref={closeButton} className="gb-close" type="button" onClick={close} disabled={busy} aria-label={`${title} 닫기`}>
-            {/* eslint-disable-next-line @next/next/no-img-element -- Reuse the invitation's existing icon. */}
-            <img src={`${base}/assets/invitation/section-9-imgIcon1.svg`} alt="" width="20" height="20" />
-          </button>
-        </header>
-        {children}
-      </div>
-    </div>, root,
-  );
 }
 
 function MessageCard({ entry }: { entry?: Entry }) {

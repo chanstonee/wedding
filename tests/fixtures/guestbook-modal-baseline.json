@@ -1,0 +1,98 @@
+[
+  {
+    "width": 320,
+    "closed": {
+      "panel": {
+        "x": 16,
+        "y": 103,
+        "width": 288,
+        "height": 574
+      },
+      "header": {
+        "x": 37,
+        "y": 122,
+        "width": 246,
+        "height": 44
+      },
+      "name": {
+        "x": 37,
+        "y": 216,
+        "width": 246,
+        "height": 50
+      },
+      "password": {
+        "x": 37,
+        "y": 316,
+        "width": 246,
+        "height": 50
+      },
+      "message": {
+        "x": 37,
+        "y": 462,
+        "width": 246,
+        "height": 122
+      },
+      "submit": {
+        "x": 37,
+        "y": 602,
+        "width": 246,
+        "height": 50
+      },
+      "style": {
+        "background": "rgb(244, 240, 231)",
+        "radius": "10px",
+        "padding": "18px 20px 24px",
+        "border": "1px solid rgb(134, 106, 106)",
+        "font": "16px / 28px Pretendard, sans-serif"
+      }
+    }
+  },
+  {
+    "width": 390,
+    "closed": {
+      "panel": {
+        "x": 16,
+        "y": 112,
+        "width": 358,
+        "height": 556
+      },
+      "header": {
+        "x": 37,
+        "y": 131,
+        "width": 316,
+        "height": 44
+      },
+      "name": {
+        "x": 37,
+        "y": 225,
+        "width": 316,
+        "height": 50
+      },
+      "password": {
+        "x": 37,
+        "y": 325,
+        "width": 316,
+        "height": 50
+      },
+      "message": {
+        "x": 37,
+        "y": 453,
+        "width": 316,
+        "height": 122
+      },
+      "submit": {
+        "x": 37,
+        "y": 593,
+        "width": 316,
+        "height": 50
+      },
+      "style": {
+        "background": "rgb(244, 240, 231)",
+        "radius": "10px",
+        "padding": "18px 20px 24px",
+        "border": "1px solid rgb(134, 106, 106)",
+        "font": "16px / 28px Pretendard, sans-serif"
+      }
+    }
+  }
+]
