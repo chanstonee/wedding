@@ -22,7 +22,7 @@
 - `public/assets/invitation/`: 수정 없이 내려받은 원본 일러스트와 폰트
 - `figma-assets.json`: 원본 에셋 목록과 크기
 
-갤러리 사진 목록은 `app/lib/gallery.mjs`의 `galleryPhotoFiles`에서 관리합니다. 실제 웨딩스냅은 현재 1장이며 중복 표시하지 않습니다. 썸네일은 3열·3:4 비율·8px 간격·10px 모서리이고, 6장 이상이면 처음 5장과 숨겨진 사진 수를 표시하는 브라운 반투명 `+N MORE` 셀을 보여 줍니다. 더보기는 여섯 번째 사진부터 팝업을 열며 전체 사진을 순환 탐색합니다. 실제 계좌를 적용할 때는 `accounts` 배열을 수정하고 예시 안내 문구도 함께 정리하세요.
+갤러리 사진 목록은 `app/lib/gallery.mjs`의 `galleryPhotoFiles`에서 관리합니다. 첨부된 실제 사진 7장을 업로드 순서대로 등록했으며, 원본은 `public/assets/invitation/gallery/photo-01.jpg`부터 `photo-07.jpg`까지 보존합니다. 썸네일은 3열·3:4 비율·8px 간격·10px 모서리이고, 처음 5장과 숨겨진 사진 2장을 나타내는 브라운 반투명 `+2 MORE` 셀을 보여 줍니다. 더보기는 여섯 번째 사진부터 팝업을 열며 7장 전체를 순환 탐색합니다. 실제 계좌를 적용할 때는 `accounts` 배열을 수정하고 예시 안내 문구도 함께 정리하세요.
 
 ## GitHub Pages
 

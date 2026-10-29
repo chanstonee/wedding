@@ -1,6 +1,12 @@
 // Paths relative to public/, listed once in the popup's display order.
 export const galleryPhotoFiles = [
-  "assets/invitation/section-5-img.jpg",
+  "assets/invitation/gallery/photo-01.jpg",
+  "assets/invitation/gallery/photo-02.jpg",
+  "assets/invitation/gallery/photo-03.jpg",
+  "assets/invitation/gallery/photo-04.jpg",
+  "assets/invitation/gallery/photo-05.jpg",
+  "assets/invitation/gallery/photo-06.jpg",
+  "assets/invitation/gallery/photo-07.jpg",
 ];
 
 /** @param {readonly string[]} photos */
