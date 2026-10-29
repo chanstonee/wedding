@@ -93,3 +93,32 @@ pass. Evidence is in `/workspace/wedding-hero-motion-verification/`:
 hero-couple-preview.svg (actual SVG/CSS animation), hero-motion.css,
 motion-phases.png, original/static-grouped comparisons, results.json,
 static-fidelity.json, reduced-motion.json, standalone-preview.json and traces.
+
+## Stronger hero dance: latest pending visual review
+
+The owner found the first motion too subtle on phones. The revised common sway
+is ±3.5°, upward float is 11 SVG units (about 9/11/13.5 CSS px at 320/390/480px),
+and core period is 3.8s with ease-in-out. Male counter-sway is ±0.55°, Female is
+±0.9° with 0.14s later timing, both about the exact shared hand pivot (181,24).
+
+To strengthen the dress and hair without breaking the original connected paths,
+reuse their original geometry in upper/lower SVG clips. Dress hem below y=164
+uses ±4.5° skewX, 0.24s behind Female; back-hair tips below y=93 use ±3.5° skewX,
+0.30s behind Female. A shear is exactly zero along its horizontal seam, preserving
+attachment while moving the lower silhouette and folds together. Small clip
+edge overlaps prevent antialias gaps. No original path d or paint attribute is
+modified. Reduced motion displays the unclipped original rather than segmented
+neutral frames, restoring zero-pixel-difference static fidelity.
+
+123 sampled phases across 320/390/480px pass: exact hand anchor and seam position,
+contact-region difference below 0.20 CSS px, bounded amplitudes, seamless core
+repeat, real CSS playback, no clipping, title overlap or horizontal overflow.
+Hem displacement reaches about 6.5/7.9/9.7px and hair-tip displacement about
+2.7/3.2/4px. Extreme phase captures were visually reviewed and the stronger
+movement is visible at mobile scale without gaps, detached hands or head motion.
+Gallery/BGM regression, reduced motion, build/type checks, lint and tests pass.
+Real Safari and physical-device FPS remain unverified. No new push/deployment.
+
+Evidence: `/workspace/wedding-hero-motion-stronger-verification/` contains the
+animated SVG, old/new SVG comparison HTML, phase PNGs, traces, CSS and detailed
+JSON checks. Source: docs/hero-motion.md. No remaining P0/P1/P2 findings in scope.

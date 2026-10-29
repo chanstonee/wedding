@@ -21,8 +21,26 @@ test("exported inline SVG preserves the original paths and exposes motion groups
   const html = await readFile(new URL("../out/index.html", import.meta.url), "utf8");
   const svg = html.match(/<svg\b[^>]*class="inv-couple-art"[\s\S]*?<\/svg>/)?.[0];
   assert.ok(svg, "the hero must render accessible inline SVG");
-  const rendered = [...svg.matchAll(/<path\b[^>]*\sd="([^"]*)"/g)].map(([, d]) => d);
-  assert.deepEqual(rendered, original.map(({ d }) => d));
+  const rendered = [...svg.matchAll(/<path\b([^>]+)>/g)].map(([, attributes]) =>
+    Object.fromEntries([...attributes.matchAll(/([\w-]+)="([^"]*)"/g)].map(([, key, value]) => [key, value])),
+  );
+  const sources = new Map(original.map((path) => [path.id, path]));
+  const firstAppearance = new Set();
+  const elementIds = new Set();
+  for (const path of rendered) {
+    const source = sources.get(path["data-original-id"]);
+    assert.ok(source, "every clipped fragment must come from an original path");
+    for (const key of ["d", "fill", "fillOpacity", "fillRule", "clipRule"]) {
+      const attribute = key.replace("fillOpacity", "fill-opacity").replace("fillRule", "fill-rule").replace("clipRule", "clip-rule");
+      assert.equal(path[attribute], source[key], `${source.id}: ${key}`);
+    }
+    assert.ok(!elementIds.has(path.id), "SVG fragment IDs must remain unique");
+    elementIds.add(path.id);
+    firstAppearance.add(source.id);
+  }
+  assert.deepEqual([...firstAppearance], original.map(({ id }) => id));
+  for (const clip of ["dress-body", "dress-hem", "hair-root", "hair-tip"])
+    assert.ok(svg.includes(`<clipPath id="inv-hero-${clip}"`), clip);
   for (const group of ["Male", "Female", "Dress", "Hair", "Decoration"])
     assert.ok(svg.includes(`data-part="${group}"`), group);
   assert.match(svg, /role="img"/);

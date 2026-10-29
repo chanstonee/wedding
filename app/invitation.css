@@ -234,6 +234,9 @@ body:has(.wedding-invitation)::before {
   height: auto;
   overflow: visible;
 }
+.inv-couple-rest {
+  display: none;
+}
 .inv-couple-sway,
 .inv-couple-body {
   /* Shared SVG-space hand contact: independent bodies keep the same anchor. */
@@ -242,29 +245,29 @@ body:has(.wedding-invitation)::before {
 }
 .inv-couple-dress {
   transform-box: view-box;
-  transform-origin: 216px 146px;
+  transform-origin: 248px 164px;
 }
 .inv-couple-hair {
   transform-box: view-box;
-  transform-origin: 223px 64px;
+  transform-origin: 232px 93px;
 }
 .is-revealed .inv-couple-float {
-  animation: inv-couple-float 4.8s 1.5s ease-in-out infinite;
+  animation: inv-couple-float 3.8s 1.5s ease-in-out infinite;
 }
 .is-revealed .inv-couple-sway {
-  animation: inv-couple-sway 4.8s 1.5s ease-in-out infinite;
+  animation: inv-couple-sway 3.8s 1.5s ease-in-out infinite;
 }
 .is-revealed .inv-couple-male {
-  animation: inv-couple-male 4.8s 1.5s ease-in-out infinite;
+  animation: inv-couple-male 3.8s 1.5s ease-in-out infinite;
 }
 .is-revealed .inv-couple-female {
-  animation: inv-couple-female 4.8s 1.5s ease-in-out infinite;
+  animation: inv-couple-female 3.8s 1.64s ease-in-out infinite;
 }
 .is-revealed .inv-couple-dress {
-  animation: inv-couple-dress 4.8s 1.74s ease-in-out infinite;
+  animation: inv-couple-dress 3.8s 1.88s ease-in-out infinite;
 }
 .is-revealed .inv-couple-hair {
-  animation: inv-couple-hair 4.8s 1.82s ease-in-out infinite;
+  animation: inv-couple-hair 3.8s 1.94s ease-in-out infinite;
 }
 .is-revealed .inv-couple-heart {
   animation: inv-couple-heart 5.2s 1.8s ease-in-out infinite;
@@ -1023,32 +1026,32 @@ body:has(.wedding-invitation)::before {
 }
 @keyframes inv-couple-sway {
   0%, 50%, 100% { transform: rotate(0deg); }
-  25% { transform: rotate(-1.1deg); }
-  75% { transform: rotate(1.1deg); }
+  25% { transform: rotate(-3.5deg); }
+  75% { transform: rotate(3.5deg); }
 }
 @keyframes inv-couple-float {
   0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-4px); }
+  50% { transform: translateY(-11px); }
 }
 @keyframes inv-couple-male {
   0%, 50%, 100% { transform: rotate(0deg); }
-  25% { transform: rotate(0.22deg); }
-  75% { transform: rotate(-0.22deg); }
+  25% { transform: rotate(0.55deg); }
+  75% { transform: rotate(-0.55deg); }
 }
 @keyframes inv-couple-female {
   0%, 50%, 100% { transform: rotate(0deg); }
-  25% { transform: rotate(-0.28deg); }
-  75% { transform: rotate(0.28deg); }
+  25% { transform: rotate(-0.9deg); }
+  75% { transform: rotate(0.9deg); }
 }
 @keyframes inv-couple-dress {
-  0%, 50%, 100% { transform: rotate(0deg); }
-  25% { transform: rotate(0.18deg); }
-  75% { transform: rotate(-0.18deg); }
+  0%, 50%, 100% { transform: skewX(0deg); }
+  25% { transform: skewX(4.5deg); }
+  75% { transform: skewX(-4.5deg); }
 }
 @keyframes inv-couple-hair {
-  0%, 50%, 100% { transform: rotate(0deg); }
-  25% { transform: rotate(0.32deg); }
-  75% { transform: rotate(-0.32deg); }
+  0%, 50%, 100% { transform: skewX(0deg); }
+  25% { transform: skewX(3.5deg); }
+  75% { transform: skewX(-3.5deg); }
 }
 @keyframes inv-couple-heart {
   0%, 100% { transform: translateY(0); }
@@ -1098,6 +1101,8 @@ body:has(.wedding-invitation)::before {
   }
 }
 @media (prefers-reduced-motion: reduce) {
+  .inv-couple-motion { display: none; }
+  .inv-couple-rest { display: inline; }
   .wedding-invitation *,
   .wedding-invitation *:before,
   .wedding-invitation *:after {
